@@ -1,0 +1,107 @@
+.cards-set-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.cards-set {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 100%;
+    overflow: auto;
+    margin: 10px;
+    flex: 1;
+}
+
+.hide {
+    margin-right: 15px;
+}
+
+.voting-card {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    margin: 10px;
+    flex: 1;
+}
+
+.voting-card .card {
+    margin: 0;
+}
+
+.card {
+    height: 42vh;
+    width: 28vh;
+    position: relative;
+    margin-right: -12vh;
+    border: 3px solid #282c34;
+    background-color: #E2E3E4;
+    border-radius: 15px;
+}
+
+.card:last-of-type {
+    margin: 0;
+}
+
+.selected {
+    border: 4px solid #E2E3E4;
+    z-index: 999;
+    height: 47vh;
+    width: 31.31vh;
+}
+
+.card-image {
+    height: inherit;
+    width: inherit;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.control {
+    min-height: 43.6px;
+}
+
+.card-number {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: #f7f7f7;
+    color: darkslategrey;
+    height: 24px;
+    width: 24px;
+    border-radius: 12px;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    z-index: 100;
+}
+
+@media (max-height: 670px) {
+    .card {
+        height: 46vh;
+        width: 30.7vh;
+    }
+
+    .selected {
+        height: 51vh;
+        width: 34vh;
+    }
+}
+
+@media (max-height: 570px) {
+    .card {
+        height: 40vh;
+        width: 26.7vh;
+    }
+
+    .selected {
+        height: 47vh; 
+        width: 31.4vh;
+    }
+}

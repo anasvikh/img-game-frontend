@@ -1,0 +1,30 @@
+.game-info {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.round-results {
+    justify-content: space-between;
+}
+
+.results-list {
+    max-height: 25vh;
+    overflow-y: hidden;
+}
+
+.card-wrapper {
+    position: relative;
+    width: 23.35vh;
+    margin: 0 auto;
+}
+
+.active-card {
+    height: 35vh;
+    width: inherit;
+    object-fit: cover;
+}
+
+
+.users-points {
+    margin: 10px 0;
+}

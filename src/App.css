@@ -1,0 +1,52 @@
+html, body, #root, #root>div {
+  height: 100%
+}
+
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-logo {
+  height: 70px;
+  margin-left: 20px;
+}
+
+.App-name {
+  margin-top: 10px;
+}
+
+.App-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #E2E3E4;
+  padding: 40px 10px 10px;
+}
+
+.App-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  max-height: 580px;
+}
+
+@media (max-height: 670px) {
+  .App-header {
+    flex-direction: row;
+    padding-top: 20px;
+  }
+
+  .App-logo {
+    height: 45px;
+    margin-left: unset;
+  }
+
+  .App-name {
+    margin-top: 20px;
+  }
+}
