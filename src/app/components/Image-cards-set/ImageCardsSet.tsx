@@ -80,7 +80,7 @@ export class ImageCardsSet extends Component<ImageCardsSetProps, ImageCardsSetSt
                                     <div className="card-number">{card.numberInSet}</div>}
                                 <img
                                     className="card-image"
-                                    src={`${window.location.origin}${card.src}`}></img>
+                                    src={`http://3.22.164.241:88${card.src}`}></img>
                             </div>
                         </Zoom>
                     )}

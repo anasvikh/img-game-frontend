@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+  web:
+    ports:
+      - "80:80"
+    image: "avikhlyaeva/img-game-frontend:latest"
+    depends_on:
+      - api
+
+  api:
+    ports:
+      - "88:80"
+    image: "avikhlyaeva/imggamebackend:latest"
