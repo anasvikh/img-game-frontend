@@ -46,7 +46,7 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                                         <div className="card-number">{this.props.results.activePlayCard.numberInSet}</div>}
                                     <img
                                         className="card active-card"
-                                        src={`${window.location.origin}${this.props.results.activePlayCard.src}`}></img>
+                                        src={`${process.env.REACT_APP_API_URL}${this.props.results.activePlayCard.src}`}></img>
                                 </div>
                             </div>
                         </Zoom>

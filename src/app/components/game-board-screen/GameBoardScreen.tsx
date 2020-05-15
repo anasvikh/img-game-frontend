@@ -31,7 +31,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
         return (
             this.props.results && <div className="main-menu game-board-screen">
                 <div className="game-board">
-                    <img className="board-background" src={`${window.location.origin}/images/gameboard.jpg`} />
+                    <img className="board-background" src={`${process.env.REACT_APP_API_URL}/images/gameboard.jpg`} />
                     {
                         results.map((usersList, pointNumber) => {
                             return <div className={`point point${pointNumber}`}>

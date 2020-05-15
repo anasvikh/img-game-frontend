@@ -80,7 +80,7 @@ export class ImageCardsSet extends Component<ImageCardsSetProps, ImageCardsSetSt
                                     <div className="card-number">{card.numberInSet}</div>}
                                 <img
                                     className="card-image"
-                                    src={`http://3.22.164.241:88${card.src}`}></img>
+                                    src={`${process.env.REACT_APP_API_URL}/${card.src}`}></img>
                             </div>
                         </Zoom>
                     )}
@@ -91,7 +91,7 @@ export class ImageCardsSet extends Component<ImageCardsSetProps, ImageCardsSetSt
                         <div className="card selected">
                         {this.state.selected.src.includes('Painters') &&
                                     <div className="card-number">{this.state.selected.numberInSet}</div>}
-                            <img className="card-image" src={`${window.location.origin}${this.state.selected.src}`}></img>
+                            <img className="card-image" src={`${process.env.REACT_APP_API_URL}${this.state.selected.src}`}></img>
                         </div>
                     </div>}
 
