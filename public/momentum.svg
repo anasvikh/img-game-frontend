@@ -1,0 +1,28 @@
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="128" height="128" viewBox="0 0 100 100">
+		<defs>
+			<g id="background">
+<path fill="url(#background-gradient)" stroke="none" d=" M 97.2 2.8 Q 94.35 0 90.6 0 L 9.4 0 Q 5.55 0 2.8 2.8 0 5.55 0 9.4 L 0 90.6 Q 0 94.35 2.8 97.2 5.55 100 9.4 100 L 90.6 100 Q 94.35 100 97.2 97.2 100 94.35 100 90.6 L 100 9.4 Q 100 5.55 97.2 2.8 Z"/>
+</g><g id="bottom-1">
+<path fill="#FFFFFF" fill-opacity="0.30196078431372547" stroke="none" d=" M 90.6 2.35 Q 94.45 2.35 97.3 5.05 99.9 7.65 100 11.55 L 100 9.4 Q 100 5.4 97.3 2.7 94.45 0 90.6 0 L 9.4 0 Q 5.4 0 2.7 2.7 0 5.4 0 9.4 L 0 11.55 Q 0.1 7.65 2.7 5.05 5.4 2.35 9.4 2.35 L 90.6 2.35 Z"/>
+</g><mask id="mask">
+<path fill="#FFFFFF" stroke="none" d=" M 97.2 2.8 Q 94.35 0 90.6 0 L 9.4 0 Q 5.55 0 2.8 2.8 0 5.55 0 9.4 L 0 90.6 Q 0 94.35 2.8 97.2 5.55 100 9.4 100 L 90.6 100 Q 94.35 100 97.2 97.2 100 94.35 100 90.6 L 100 9.4 Q 100 5.55 97.2 2.8 Z"/>
+</mask>			
+	<linearGradient id="background-gradient" x1="0" y1="0" y2="1" x2="0" >
+		<stop stop-color="#171c26" offset="0%"/>
+		<stop stop-color="#27276b" offset="100%"/>
+	</linearGradient>	
+			<g transform="scale(0.1813595100282378) translate(51.9534912109375 0)" id="picture"><path d="M413.695 0s-45.366 44.014-94.43 61.759c-363.333 131.419-210.1 387.518-205.101 388.362 0 0 20.374-35.48 47.896-55.717C336.704 266.015 372.2 118.233 372.2 118.233s-39.19 177.829-194.562 288.479c-34.316 24.426-57.552 84.568-67.388 144.679 0 0 24.325-9.828 34.785-12.49 4.079-26.618 12.607-52.106 27.025-74.875C389.211 489.88 460.332 314.903 469.623 253.89 491.552 109.79 413.695 0 413.695 0z"/></g>	
+	<linearGradient id="picture-gradient" x1="0" y1="0" y2="1" x2="0" >
+		<stop stop-color="#ffffff" offset="0%"/>
+		<stop stop-color="#e5eff9" offset="100%"/>
+	</linearGradient>
+
+		</defs>
+			<use xlink:href="#background" fill="url(#background-gradient)" />
+			<g mask="url(#mask)">
+				<g transform="translate(50 50) translate(-5 0)  scale(0.7000000000000002) translate(-50 -50)">
+<use xlink:href="#picture" fill="url(#picture-gradient)"  />
+</g>
+</g>
+<use xlink:href="#bottom-1" />
+</svg>
