@@ -80,7 +80,7 @@ export class ImageCardsSet extends Component<ImageCardsSetProps, ImageCardsSetSt
                                     <div className="card-number">{card.numberInSet}</div>}
                                 <img
                                     className="card-image"
-                                    src={`${process.env.REACT_APP_API_URL}/${card.src}`}></img>
+                                    src={`${process.env.REACT_APP_API_URL}${card.src}`}></img>
                             </div>
                         </Zoom>
                     )}

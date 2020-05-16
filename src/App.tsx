@@ -20,7 +20,7 @@ function App() {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <div className="App-name">Imaginarium</div>
+          <div className="App-name">Momentum</div>
         </header>
         <Game></Game>
       </div>
