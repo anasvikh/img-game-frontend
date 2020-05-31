@@ -39,12 +39,14 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                                     return <Zoom
                                         in={!!user}
                                         style={{ transitionDelay: "300ms" }}>
-                                        <Tooltip title={user.username} disableFocusListener disableTouchListener>
-                                            <div key={userNumber}
-                                                className={`player player${userNumber}`}>
-                                                <img src={require(`../../../assets/svg/chips/chip-${user.chipColor}.svg`)} />
-                                            </div>
-                                        </Tooltip>
+                                        <div>
+                                            <Tooltip title={user.username} disableFocusListener disableTouchListener>
+                                                <div key={userNumber}
+                                                    className={`player player${userNumber}`}>
+                                                    <img src={require(`../../../assets/svg/chips/chip-${user.chipColor}.svg`)} />
+                                                </div>
+                                            </Tooltip>
+                                        </div>
                                     </Zoom>
                                 })}
                             </div>

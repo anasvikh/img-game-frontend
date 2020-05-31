@@ -31,6 +31,7 @@ type State = {
     roundResults?: IRoundResultsModel,
 
     username: string,
+    isSuperUser: boolean,
     usersList: string[],
     activePlayer?: string
 
@@ -74,6 +75,7 @@ export class Game extends Component<{}, State> {
             loadingLogs: [],
 
             username: localStorage.getItem('IMG_username') || this.generateUsername(),
+            isSuperUser: false,
             usersList: [],
 
             selectedCardId: null,
@@ -307,7 +309,7 @@ export class Game extends Component<{}, State> {
 
     getCardSets = () => {
         this.state.hubConnection
-            .invoke('getCardSets')
+            .invoke('getCardSets', this.state.isSuperUser)
             .catch((err: any) => console.error(err));
     };
 
@@ -419,6 +421,22 @@ export class Game extends Component<{}, State> {
             localStorage.setItem('IMG_screen_state', ScreenStateEnum.Game.toString());
             this.getCards();
         }, 1);
+    }
+
+    checkSuperUserPassword = (password: string) => {
+        this.handleInputDialogClose();
+        if (password === this.getSuperUserPassword()) {
+            alert('Ты суперпользователь!')
+            this.setState({
+                isSuperUser: true
+            })
+        }
+    }
+
+    getSuperUserPassword = (): string => {
+        const date = new Date();
+        const password = date.getDate() + date.getHours() + Math.pow(date.getDay(), 2);
+        return password.toString();
     }
 
     showGameboard = () => {
@@ -570,7 +588,8 @@ export class Game extends Component<{}, State> {
                 {this.state.screenState === ScreenStateEnum.Menu &&
                     <HomeScreen
                         onCreateGame={this.getCardSets}
-                        onJoinGame={() => this.handleClickOpen('Введите код игры:', 'number', this.joinGame)}></HomeScreen>}
+                        onJoinGame={() => this.handleClickOpen('Введите код игры:', 'number', this.joinGame)}
+                        onCheckSuperUser={() => this.handleClickOpen('Введите пароль:', 'password', this.checkSuperUserPassword)}></HomeScreen>}
 
                 {this.state.screenState === ScreenStateEnum.WaitingUsers &&
                     <WaitingUsersScreen

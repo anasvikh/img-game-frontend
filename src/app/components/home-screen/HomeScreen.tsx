@@ -5,10 +5,10 @@ import './HomeScreen.css'
 type HomeScreenProps = {
     onCreateGame: any,
     onJoinGame: any,
+    onCheckSuperUser: any
 }
 
 export class HomeScreen extends Component<HomeScreenProps> {
-
     render() {
         return (
             <div className="main-menu home">
@@ -16,6 +16,8 @@ export class HomeScreen extends Component<HomeScreenProps> {
                     onClick={this.props.onCreateGame}>Создать игру</Button>
                 <Button variant="outlined" size="large" color="primary" className="app-button"
                     onClick={this.props.onJoinGame}>Присоединиться</Button>
+                <div className="secret-field" onClick={this.props.onCheckSuperUser}>
+                </div>
             </div>
         )
     }
