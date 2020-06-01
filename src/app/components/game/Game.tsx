@@ -102,7 +102,7 @@ export class Game extends Component<{}, State> {
     }
 
     componentDidMount = () => {
-        const hubConnection = new signalR.HubConnectionBuilder().withUrl(`${process.env.REACT_APP_API_URL}/game`, {
+        const hubConnection = new signalR.HubConnectionBuilder().withUrl(`/game`, {
             skipNegotiation: true,
             transport: signalR.HttpTransportType.WebSockets
           }).build();
