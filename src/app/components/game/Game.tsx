@@ -15,6 +15,8 @@ import { IRoundResultsModel } from '../../models/roundResults.model';
 import { SubmitDialog } from '../submit-dialog/submitDialog';
 import SubMenu from '../submenu/Submenu';
 import { GameBoardScreen } from '../game-board-screen/GameBoardScreen';
+import { AuthorsScreen } from '../authors-screen/AuthorsScreen';
+import { IAuthorModel } from '../../models/author.model';
 
 type State = {
     hubConnection: any,
@@ -55,7 +57,9 @@ type State = {
         header: string,
         values: ILookupModel[]
         onSubmit: any
-    }
+    },
+
+    authors: IAuthorModel[]
 }
 
 export class Game extends Component<{}, State> {
@@ -97,15 +101,33 @@ export class Game extends Component<{}, State> {
                 header: '',
                 values: [],
                 onSubmit: null
-            }
+            },
+
+            authors: [
+                // {
+                //     name: 'Ван гог',
+                //     cards: [1, 2, 3],
+                //     link: 'https://www.google.com'
+                // },
+                // {
+                //     name: 'Васнецов',
+                //     cards: [6, 7, 8, 9,],
+                //     link: 'https://www.google.com'
+                // },
+                // {
+                //     name: 'Репин',
+                //     cards: [11, 12, 13, 14, 15],
+                //     link: 'https://www.google.com'
+                // }
+            ]
         };
     }
 
     componentDidMount = () => {
-        const hubConnection = new signalR.HubConnectionBuilder().withUrl(`/game`, {
+        const hubConnection = new signalR.HubConnectionBuilder().withUrl(`http://3.22.164.241:88/game`, {
             skipNegotiation: true,
             transport: signalR.HttpTransportType.WebSockets
-          }).build();
+        }).build();
 
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
@@ -256,11 +278,11 @@ export class Game extends Component<{}, State> {
                 console.log('карты для раунда', result);
                 const messageForUser = this.state.isGuessingMode ?
                     this.state.username === activePlayer ?
-                    'Посмотри на карты других игроков. А затем выбери свою.' :
-                    'Теперь попытайся угадать карту ведущего.':
+                        'Посмотри на карты других игроков. А затем выбери свою.' :
+                        'Теперь попытайся угадать карту ведущего.' :
                     this.state.username === activePlayer ?
-                    'Ты ведущий. Выбери карту, придумай ассоциацию и сообщи ее другим игрокам.' :
-                    'Твоя задача - выбрать карту, которая максимально подходит к ассоциации ведущего.';
+                        'Ты ведущий. Выбери карту, придумай ассоциацию и сообщи ее другим игрокам.' :
+                        'Твоя задача - выбрать карту, которая максимально подходит к ассоциации ведущего.';
                 this.setState({
                     userCards: result,
                     loadingLogs: [],
@@ -571,7 +593,7 @@ export class Game extends Component<{}, State> {
             <div className="App-content">
 
                 {this.state.screenState === ScreenStateEnum.RoundResults && <div className="sub-menu">
-                    <SubMenu onLeaveGame={this.openLeaveGameDialog}/>
+                    <SubMenu onLeaveGame={this.openLeaveGameDialog} />
                 </div>}
 
                 {this.state.username &&
@@ -589,7 +611,8 @@ export class Game extends Component<{}, State> {
                     <HomeScreen
                         onCreateGame={this.getCardSets}
                         onJoinGame={() => this.handleClickOpen('Введите код игры:', 'number', this.joinGame)}
-                        onCheckSuperUser={() => this.handleClickOpen('Введите пароль:', 'password', this.checkSuperUserPassword)}></HomeScreen>}
+                        onCheckSuperUser={() => this.handleClickOpen('Введите пароль:', 'password', this.checkSuperUserPassword)}
+                        onShowAuthors={() => this.setState({ screenState: ScreenStateEnum.Authors })}></HomeScreen>}
 
                 {this.state.screenState === ScreenStateEnum.WaitingUsers &&
                     <WaitingUsersScreen
@@ -601,8 +624,8 @@ export class Game extends Component<{}, State> {
                     <ImageCardsSet
                         cards={this.state.userCards}
                         isResultsAvailable={this.state.isAllCardsSended && this.state.username === this.state.activePlayer}
-                        onSendCard={this.state.isGuessingMode? 
-                            this.voteForCard:
+                        onSendCard={this.state.isGuessingMode ?
+                            this.voteForCard :
                             this.selectCard}
                         onGetRoundResults={this.getRoundResults}
                         isGuessingMode={this.state.isGuessingMode}
@@ -620,6 +643,10 @@ export class Game extends Component<{}, State> {
                         gameId={this.state.gameId}
                         results={this.state.roundResults}
                         onGameBoardClose={this.closeGameboard}></GameBoardScreen>}
+
+                {this.state.screenState === ScreenStateEnum.Authors &&
+                    <AuthorsScreen
+                        authors={this.state.authors}></AuthorsScreen>}
 
                 {this.state.screenState === ScreenStateEnum.Loading && <div>
                     <div className="text">Загрузка...</div>

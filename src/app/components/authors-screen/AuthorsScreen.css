@@ -1,0 +1,22 @@
+.authors-list {
+    margin-top: 5px;
+}
+
+.author {
+    margin-top: 15px;
+}
+
+.cards-block {
+    display: flex;
+    justify-content: center;
+    max-width: 200px;
+    margin: 2px auto;
+}
+
+.cards-block div {
+    width: 30px;
+}
+
+a { 
+    color: #E2E3E4 !important;
+}

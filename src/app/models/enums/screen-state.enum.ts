@@ -4,5 +4,6 @@ export enum ScreenStateEnum {
     Game,
     RoundResults,
     Loading,
-    GameBoard
+    GameBoard,
+    Authors
 }

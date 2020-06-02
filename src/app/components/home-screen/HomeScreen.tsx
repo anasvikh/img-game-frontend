@@ -6,6 +6,7 @@ type HomeScreenProps = {
     onCreateGame: any,
     onJoinGame: any,
     onCheckSuperUser: any
+    onShowAuthors: any
 }
 
 export class HomeScreen extends Component<HomeScreenProps> {
@@ -16,6 +17,8 @@ export class HomeScreen extends Component<HomeScreenProps> {
                     onClick={this.props.onCreateGame}>Создать игру</Button>
                 <Button variant="outlined" size="large" color="primary" className="app-button"
                     onClick={this.props.onJoinGame}>Присоединиться</Button>
+                <Button size="large" color="primary" className="app-button"
+                    onClick={this.props.onShowAuthors}>Авторы</Button>
                 <div className="secret-field" onClick={this.props.onCheckSuperUser}>
                 </div>
             </div>
