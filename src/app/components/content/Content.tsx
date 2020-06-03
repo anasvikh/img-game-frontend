@@ -127,7 +127,7 @@ export class Content extends Component<{}, State> {
                 <div className="text user-message">{this.state.isUserMessageVisible}{this.state.messageForUser}</div>}
 
                 {this.state.hubConnection && this.state.hubConnection.state === 'Connected' && <Router>
-                    <Suspense fallback={<div>Загрузка...</div>}>
+                    <Suspense fallback={<div className="text">Загрузка...</div>}>
                         <Switch>
                             <Route exact path="/"
                                 render={(props) =>

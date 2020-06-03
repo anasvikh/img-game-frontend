@@ -163,6 +163,10 @@ export default class Game extends Component<GameProps, GameState> {
         this.props.onUserMessageVisibilityChange(userMessageVisibility);
     }
 
+    componentWillUnmount = () => {
+        this.props.onUserMessageVisibilityChange(true);
+    }
+
     checkActiveGame = () => {
         const game = localStorage.getItem('IMG_game');
         const username = localStorage.getItem('IMG_username');
