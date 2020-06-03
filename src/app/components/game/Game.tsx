@@ -1,441 +1,247 @@
 import React, { Component } from 'react';
 import './Game.css'
-import * as signalR from "@microsoft/signalr";
 import { ScreenStateEnum } from '../../models/enums/screen-state.enum';
 import { ImageCardsSet } from '../Image-cards-set/ImageCardsSet';
-import { HomeScreen } from '../home-screen/HomeScreen';
-import { WaitingUsersScreen } from '../waiting-users-screen/WaitingUsersScreen';
-import { CheckboxDialog } from '../checkbox-dialog/CheckboxDialog';
-import { InputDialog } from '../input-dialog/InputDialog';
-import { ILookupModel } from '../../models/lookup.model';
 import { ICardModel } from '../../models/card.model';
-import EditIcon from '@material-ui/icons/Edit';
 import { RoundResultsScreen } from '../round-results-screen/RoundResultsScreen';
 import { IRoundResultsModel } from '../../models/roundResults.model';
 import { SubmitDialog } from '../submit-dialog/submitDialog';
 import SubMenu from '../submenu/Submenu';
 import { GameBoardScreen } from '../game-board-screen/GameBoardScreen';
-import { AuthorsScreen } from '../authors-screen/AuthorsScreen';
-import { IAuthorModel } from '../../models/author.model';
 
-type State = {
-    hubConnection: any,
-
+type GameProps = {
+    hub: any,
+    history: any,
     gameId: number | null,
-    cardSets: ILookupModel[]
+    username: string,
+    onMessageReceived: any;
+    onUserMessageVisibilityChange: any;
+}
 
+type GameState = {
     screenState: ScreenStateEnum,
     isGuessingMode: boolean,
     isShowVoteMode: boolean,
-    messageForUser: string,
     isAllCardsSended: boolean,
     loadingLogs: string[],
     roundResults?: IRoundResultsModel,
 
-    username: string,
-    isSuperUser: boolean,
-    usersList: string[],
     activePlayer?: string
 
     selectedCardId: number | null,
     userCards: ICardModel[],
 
-    inputDialogConfig: {
-        open: boolean
-        header: string,
-        inputType?: string,
-        onSubmit: any
-    },
     submitDialogConfig: {
         open: boolean
         header: string,
         onSubmit: any,
         onClose: any
     },
-    checkboxDialogConfig: {
-        open: boolean
-        header: string,
-        values: ILookupModel[]
-        onSubmit: any
-    },
-
-    authors: IAuthorModel[]
 }
 
-export class Game extends Component<{}, State> {
-    constructor(props: Readonly<{}>) {
+export default class Game extends Component<GameProps, GameState> {
+    constructor(props: Readonly<GameProps>) {
         super(props);
+        console.log(props);
         this.state = {
-            hubConnection: null,
-
-            gameId: null,
-            cardSets: [],
-
             screenState: ScreenStateEnum.Loading,
             isGuessingMode: false,
             isShowVoteMode: false,
-            messageForUser: '',
             isAllCardsSended: false,
             loadingLogs: [],
-
-            username: localStorage.getItem('IMG_username') || this.generateUsername(),
-            isSuperUser: false,
-            usersList: [],
 
             selectedCardId: null,
             userCards: [],
 
-            inputDialogConfig: {
-                open: false,
-                header: '',
-                onSubmit: null
-            },
             submitDialogConfig: {
                 open: false,
                 header: '',
                 onSubmit: null,
                 onClose: null
-            },
-            checkboxDialogConfig: {
-                open: false,
-                header: '',
-                values: [],
-                onSubmit: null
-            },
-
-            authors: [
-                // {
-                //     name: 'Ван гог',
-                //     cards: [1, 2, 3],
-                //     link: 'https://www.google.com'
-                // },
-                // {
-                //     name: 'Васнецов',
-                //     cards: [6, 7, 8, 9,],
-                //     link: 'https://www.google.com'
-                // },
-                // {
-                //     name: 'Репин',
-                //     cards: [11, 12, 13, 14, 15],
-                //     link: 'https://www.google.com'
-                // }
-            ]
+            }
         };
     }
 
     componentDidMount = () => {
-        const hubConnection = new signalR.HubConnectionBuilder().withUrl(`/game`, {
-            skipNegotiation: true,
-            transport: signalR.HttpTransportType.WebSockets
-        }).build();
-
-        this.setState({ hubConnection }, () => {
-            this.state.hubConnection
-                .start()
-                .then(() => {
-                    console.log('Connection started!');
-                    this.setState({
-                        screenState: ScreenStateEnum.Menu
-                    });
-                    this.checkActiveGame();
-                })
-                .catch((err: any) => console.log('Error while establishing connection :('));
-
-            this.state.hubConnection.on('checkActiveGame', (gameId: number, username: string, isGameActive: boolean) => {
-
-                const isGuessingMode = localStorage.getItem('IMG_is_guessing_mode');
-                if (isGameActive && isGuessingMode !== null) {
-                    this.setState({
-                        gameId,
-                        isGuessingMode: isGuessingMode === 'true'
-                    });
-                    this.openRestoreGameDialog()
-                }
-            });
-
-            this.state.hubConnection.on('getCardSets', (cardSets: ILookupModel[], error: any) => {
-                console.log(error);
+        this.checkActiveGame();
+        this.props.hub.on('checkActiveGame', (gameId: number, username: string, isGameActive: boolean) => {
+            console.log('check game results: ', gameId, username, isGameActive);
+            const isGuessingMode = localStorage.getItem('IMG_is_guessing_mode');
+            if (isGameActive && isGuessingMode !== null) {
                 this.setState({
-                    cardSets,
-                    checkboxDialogConfig: {
-                        open: true,
-                        header: 'Выбери игровые наборы',
-                        values: cardSets,
-                        onSubmit: this.createGame
-                    }
+                    isGuessingMode: isGuessingMode === 'true'
                 });
-            });
-
-            this.state.hubConnection.on('createGame', (gameId: number, username: string, error: any) => {
-                console.log(gameId, username, error);
-                this.setState({
-                    gameId,
-                    screenState: ScreenStateEnum.WaitingUsers,
-                    usersList: [username],
-                    messageForUser: 'Игра создана',
-                    checkboxDialogConfig: {
-                        open: false,
-                        header: '',
-                        values: [],
-                        onSubmit: null
-                    }
-                });
-                localStorage.setItem('IMG_game', gameId.toString());
-            });
-
-            this.state.hubConnection.on('joinGame', (gameId: number, usersList: string[], success: boolean, message: string) => {
-                console.log(gameId, usersList, success);
-
-                this.setState({
-                    inputDialogConfig: {
-                        open: false,
-                        header: '',
-                        onSubmit: null
-                    }
-                });
-
-                if (success === null) {
-                    this.setState({
-                        gameId,
-                        usersList,
-                    });
-                    return;
-                }
-
-                if (success) {
-                    this.setState({
-                        gameId,
-                        usersList,
-                        screenState: ScreenStateEnum.WaitingUsers,
-                        messageForUser: 'Вы присоединились к игре'
-                    });
-                    localStorage.setItem('IMG_game', gameId.toString());
-                } else {
-                    this.setState({
-                        messageForUser: message
-                    });
-                }
-            });
-
-            this.state.hubConnection.on('startGame', (gameId: number, receivedMessage: string) => {
-                console.log(receivedMessage);
-                this.setState({
-                    gameId,
-                    screenState: ScreenStateEnum.Loading,
-                    isGuessingMode: false,
-                    messageForUser: 'Игра началась'
-                });
-                localStorage.setItem('IMG_is_guessing_mode', 'false');
-                localStorage.setItem('IMG_screen_state', ScreenStateEnum.Loading.toString());
-                this.getCards();
-            });
-
-            this.state.hubConnection.on('selectCard', (isAllCardsSended: boolean, username: string) => {
-                console.log('Все карточки выбраны', isAllCardsSended);
-                if (isAllCardsSended) {
-                    this.finishRound();
-                } else {
-                    if (this.state.username === username) {
-                        this.setState({
-                            screenState: ScreenStateEnum.Loading,
-                        })
-                        localStorage.setItem('IMG_screen_state', ScreenStateEnum.Loading.toString());
-                    } else {
-                        this.setState({
-                            loadingLogs: [...this.state.loadingLogs, username]
-                        })
-                    }
-                }
-            });
-
-            this.state.hubConnection.on('voteForCard', (isAllCardsSended: boolean, username: string, error: string) => {
-                console.log('Все карточки отправлены', isAllCardsSended);
-                if (error) {
-                    this.setState({
-                        messageForUser: error,
-                        isShowVoteMode: false
-                    })
-                } else {
-                    this.setState({
-                        isAllCardsSended,
-                    })
-                }
-            });
-
-            this.state.hubConnection.on('getRoundResults', (results: IRoundResultsModel) => {
-                console.log('Результаты получены');
-                if (results) {
-                    this.setState({
-                        roundResults: results,
-                        screenState: ScreenStateEnum.RoundResults,
-                        isAllCardsSended: false
-                    });
-                    localStorage.setItem('IMG_screen_state', ScreenStateEnum.RoundResults.toString());
-                }
-            });
-
-            this.state.hubConnection.on('getCards', (result: ICardModel[], activePlayer: string) => {
-                console.log('карты для раунда', result);
-                const messageForUser = this.state.isGuessingMode ?
-                    this.state.username === activePlayer ?
-                        'Посмотри на карты других игроков. А затем выбери свою.' :
-                        'Теперь попытайся угадать карту ведущего.' :
-                    this.state.username === activePlayer ?
-                        'Ты ведущий. Выбери карту, придумай ассоциацию и сообщи ее другим игрокам.' :
-                        'Твоя задача - выбрать карту, которая максимально подходит к ассоциации ведущего.';
-                this.setState({
-                    userCards: result,
-                    loadingLogs: [],
-                    messageForUser,
-                    screenState: ScreenStateEnum.Game,
-                    activePlayer
-                });
-                localStorage.setItem('IMG_screen_state', ScreenStateEnum.Game.toString());
-                console.log(`cards for round:`, result);
-            });
-
-            this.state.hubConnection.on('leaveGame', (isSuccess: boolean) => {
-                if (isSuccess) {
-                    this.setState({
-                        gameId: null,
-                        screenState: ScreenStateEnum.Menu,
-                        isGuessingMode: false,
-                        usersList: [],
-                        selectedCardId: null,
-                        userCards: [],
-                        isShowVoteMode: false
-                    });
-                    localStorage.removeItem('IMG_game');
-                    localStorage.removeItem('IMG_is_guessing_mode');
-                    localStorage.removeItem('IMG_screen_state');
-
-                }
-            });
-
-            this.state.hubConnection.on('notify', (message: string) => {
-                console.warn(message);
-            });
+                this.restoreSavedGame();
+            }
         });
+
+        this.props.hub.on('selectCard', (isAllCardsSended: boolean, username: string) => {
+            console.log('Все карточки выбраны', isAllCardsSended);
+            if (isAllCardsSended) {
+                this.finishRound();
+            } else {
+                if (this.props.username === username) {
+                    this.setState({
+                        screenState: ScreenStateEnum.Loading,
+                    })
+                    localStorage.setItem('IMG_screen_state', ScreenStateEnum.Loading.toString());
+                } else {
+                    this.setState({
+                        loadingLogs: [...this.state.loadingLogs, username]
+                    })
+                }
+            }
+        });
+
+        this.props.hub.on('voteForCard', (isAllCardsSended: boolean, username: string, error: string) => {
+            console.log('Все карточки отправлены', isAllCardsSended);
+            if (error) {
+                this.setState({
+                    isShowVoteMode: false
+                });
+                this.props.onMessageReceived(error);
+            } else {
+                this.setState({
+                    isAllCardsSended,
+                });
+            }
+        });
+
+        this.props.hub.on('getRoundResults', (results: IRoundResultsModel) => {
+            console.log('Результаты получены');
+            if (results) {
+                this.setState({
+                    roundResults: results,
+                    screenState: ScreenStateEnum.RoundResults,
+                    isAllCardsSended: false
+                });
+                localStorage.setItem('IMG_screen_state', ScreenStateEnum.RoundResults.toString());
+                localStorage.setItem('IMG_round_results', JSON.stringify(this.state.roundResults));
+            }
+        });
+
+        this.props.hub.on('getCards', (result: ICardModel[], activePlayer: string) => {
+            console.log('карты для раунда', result);
+            const messageForUser = this.state.isGuessingMode ?
+                this.props.username === activePlayer ?
+                    'Посмотри на карты других игроков. А затем выбери свою.' :
+                    'Теперь попытайся угадать карту ведущего.' :
+                this.props.username === activePlayer ?
+                    'Ты ведущий. Выбери карту, придумай ассоциацию и сообщи ее другим игрокам.' :
+                    'Твоя задача - выбрать карту, которая максимально подходит к ассоциации ведущего.';
+            this.props.onMessageReceived(messageForUser);
+            this.setState({
+                userCards: result,
+                loadingLogs: [],
+                screenState: ScreenStateEnum.Game,
+                activePlayer
+            });
+            localStorage.setItem('IMG_screen_state', ScreenStateEnum.Game.toString());
+            console.log(`cards for round:`, result);
+        });
+
+        this.props.hub.on('leaveGame', (isSuccess: boolean) => {
+            if (isSuccess) {
+                localStorage.removeItem('IMG_game');
+                localStorage.removeItem('IMG_is_guessing_mode');
+                localStorage.removeItem('IMG_screen_state');
+                localStorage.removeItem('IMG_round_results');
+                this.props.history.push('/');
+            }
+        });
+    }
+
+    componentDidUpdate = (prevProps: GameProps, prevState: GameState) => {
+        if (prevState.screenState === this.state.screenState) return;
+
+        const screensWithoutUserMessage = [
+            ScreenStateEnum.RoundResults, 
+            ScreenStateEnum.GameBoard
+        ];
+        const userMessageVisibility = !screensWithoutUserMessage.includes(this.state.screenState);
+        console.log('userMessageVisibility', userMessageVisibility);
+        this.props.onUserMessageVisibilityChange(userMessageVisibility);
     }
 
     checkActiveGame = () => {
         const game = localStorage.getItem('IMG_game');
         const username = localStorage.getItem('IMG_username');
 
+        console.log('check active game: ', game, username);
         if (!game || !username) return;
 
-        this.state.hubConnection
+        this.props.hub
             .invoke('checkActiveGame', +game, username)
             .catch((err: any) => console.error(err));
-    };
-
-    getCardSets = () => {
-        this.state.hubConnection
-            .invoke('getCardSets', this.state.isSuperUser)
-            .catch((err: any) => console.error(err));
-    };
-
-    createGame = (selectedCardSets: number[]) => {
-        this.state.hubConnection
-            .invoke('createGame', this.state.username, selectedCardSets)
-            .catch((err: any) => console.error(err));
-    };
-
-    joinGame = (gameIdInputValue: string) => {
-        this.state.hubConnection
-            .invoke('joinGame', this.state.username, +gameIdInputValue)
-            .catch((err: any) => console.error(err));
-    };
-
-    startGame = () => {
-        this.state.hubConnection
-            .invoke('startGame', this.state.gameId)
-            .catch((err: any) => console.error(err));
-    };
-
-    updateUsername = (newUsername: string) => {
-        localStorage.setItem('IMG_username', newUsername);
-        this.setState({
-            username: newUsername,
-            inputDialogConfig: {
-                open: false,
-                header: '',
-                onSubmit: null
-            }
-        });
     };
 
     selectCard = (cardId: number) => {
         console.log('Выбор своей карточки ', cardId);
         if (cardId == null) {
-            this.setState({
-                messageForUser: 'Карта не выбрана'
-            });
+            this.props.onMessageReceived('Карта не выбрана');
             return;
         }
 
         this.setState({
-            userCards: [],
-            messageForUser: ''
+            userCards: []
         });
+        this.props.onMessageReceived('');
 
         console.log(cardId);
-        this.state.hubConnection
-            .invoke('selectCard', this.state.username, this.state.gameId, cardId)
+        this.props.hub
+            .invoke('selectCard', this.props.username, this.props.gameId, cardId)
             .catch((err: any) => console.error(err));
     };
 
     voteForCard = (cardId: number) => {
         console.log('Голосование за карточку ведущего ', cardId);
         if (cardId == null) {
-            this.setState({
-                messageForUser: 'Карта не выбрана'
-            });
+            this.props.onMessageReceived('Карта не выбрана');
             return;
         }
 
         this.setState({
-            messageForUser: '',
             isShowVoteMode: true
         });
+        this.props.onMessageReceived('');
 
         console.log(cardId);
-        this.state.hubConnection
-            .invoke('voteForCard', this.state.username, this.state.gameId, cardId)
+        this.props.hub
+            .invoke('voteForCard', this.props.username, this.props.gameId, cardId)
             .catch((err: any) => console.error(err));
     };
 
     getRoundResults = () => {
         console.log('Получение результатов раунда');
 
-        this.state.hubConnection
-            .invoke('getRoundResults', this.state.username, this.state.gameId)
+        this.props.hub
+            .invoke('getRoundResults', this.props.username, this.props.gameId)
             .catch((err: any) => console.error(err));
     };
 
     getCards = () => {
-        console.log('get cards', this.state.username, this.state.gameId, this.state.isGuessingMode);
-        this.state.hubConnection
-            .invoke('getCards', this.state.username, this.state.gameId, this.state.isGuessingMode)
+        console.log('get cards', this.props.username, this.props.gameId, this.state.isGuessingMode);
+        this.props.hub
+            .invoke('getCards', this.props.username, this.props.gameId, this.state.isGuessingMode)
             .catch((err: any) => console.error(err));
     };
 
     leaveGame = () => {
-        console.log('leaveGame', this.state.username, this.state.gameId);
-        this.handleSubmitDialogClose();
-        this.state.hubConnection
-            .invoke('leaveGame', this.state.username, this.state.gameId)
+        console.log('leaveGame', this.props.username, this.props.gameId);
+        this.closeSubmitDialog();
+        this.props.hub
+            .invoke('leaveGame', this.props.username, this.props.gameId)
             .catch((err: any) => console.error(err));
 
     };
 
     finishRound = () => {   // разобраться, почему так
         console.log('1', this.state.isGuessingMode);  // true
-        this.setState({
-            isGuessingMode: !this.state.isGuessingMode,
+        this.setState((state) => ({
+            isGuessingMode: !state.isGuessingMode,
             isShowVoteMode: false,
             screenState: ScreenStateEnum.Game,
-        });
+        }));
         console.log('2', this.state.isGuessingMode); // true
         setTimeout(() => {
             console.log('3', this.state.isGuessingMode); // false
@@ -443,22 +249,6 @@ export class Game extends Component<{}, State> {
             localStorage.setItem('IMG_screen_state', ScreenStateEnum.Game.toString());
             this.getCards();
         }, 1);
-    }
-
-    checkSuperUserPassword = (password: string) => {
-        this.handleInputDialogClose();
-        if (password === this.getSuperUserPassword()) {
-            alert('Ты суперпользователь!')
-            this.setState({
-                isSuperUser: true
-            })
-        }
-    }
-
-    getSuperUserPassword = (): string => {
-        const date = new Date();
-        const password = date.getDate() + date.getHours() + Math.pow(date.getDay(), 2);
-        return password.toString();
     }
 
     showGameboard = () => {
@@ -473,33 +263,7 @@ export class Game extends Component<{}, State> {
         });
     }
 
-    generateUsername(): string {
-        return Math.random().toString(20).substr(2, 6);
-    }
-
-    handleClickOpen = (header: string, inputType?: string, onSubmit?: any) => {
-        if (this.state.screenState !== ScreenStateEnum.Menu) return;
-        this.setState({
-            inputDialogConfig: {
-                open: true,
-                header,
-                inputType,
-                onSubmit
-            }
-        });
-    };
-
-    handleInputDialogClose = () => {
-        this.setState({
-            inputDialogConfig: {
-                open: false,
-                header: '',
-                onSubmit: null
-            }
-        });
-    };
-
-    handleSubmitDialogClose = () => {
+    closeSubmitDialog = () => {
         this.setState({
             submitDialogConfig: {
                 open: false,
@@ -509,17 +273,6 @@ export class Game extends Component<{}, State> {
             }
         });
     };
-
-    openRestoreGameDialog = () => {
-        this.setState({
-            submitDialogConfig: {
-                open: true,
-                header: 'Найдена активная игра. Продолжить игру?',
-                onSubmit: this.restoreSavedGame,
-                onClose: this.removeSavedGame
-            }
-        })
-    }
 
     openLeaveGameDialog = () => {
         this.setState({
@@ -527,21 +280,12 @@ export class Game extends Component<{}, State> {
                 open: true,
                 header: 'Выйти из игры?',
                 onSubmit: this.leaveGame,
-                onClose: this.handleSubmitDialogClose
+                onClose: this.closeSubmitDialog
             }
         })
     }
 
     restoreSavedGame = () => {
-        this.setState({
-            submitDialogConfig: {
-                open: false,
-                header: '',
-                onSubmit: null,
-                onClose: null
-            }
-        });
-
         const savedUsername = localStorage.getItem('IMG_username');
         const savedGameId = localStorage.getItem('IMG_game');
         const isGuessingMode = localStorage.getItem('IMG_is_guessing_mode');
@@ -549,81 +293,39 @@ export class Game extends Component<{}, State> {
 
         console.log('restore', savedUsername, savedGameId, isGuessingMode, savedScreenState);
 
-        if (savedUsername && savedGameId && isGuessingMode && savedScreenState) {
+        if (isGuessingMode && savedScreenState) {
+            console.log('restoring');
             this.setState({
-                username: savedUsername,
-                gameId: +savedGameId,
                 isGuessingMode: isGuessingMode === 'true',
                 screenState: +savedScreenState
             });
             if (+savedScreenState === ScreenStateEnum.Game) {
                 this.getCards();
             } else if (+savedScreenState === ScreenStateEnum.RoundResults) {
-                this.finishRound();
+                const savedRoundResults = localStorage.getItem('IMG_round_results');
+                if (savedRoundResults) {
+                    const roundResults: IRoundResultsModel = JSON.parse(savedRoundResults);
+                    this.setState({
+                        roundResults
+                    })
+                } else {
+                    this.finishRound();
+                }
             }
         }
     }
 
-    removeSavedGame = () => {
-        this.setState({
-            submitDialogConfig: {
-                open: false,
-                header: '',
-                onSubmit: null,
-                onClose: null
-            }
-        });
-        localStorage.removeItem('IMG_game');
-        localStorage.removeItem('IMG_is_guessing_mode');
-    }
-
-    handleCheckboxDialogClose = () => {
-        this.setState({
-            checkboxDialogConfig: {
-                open: false,
-                header: '',
-                values: [],
-                onSubmit: null
-            }
-        });
-    };
-
     render() {
         return (
             <div className="App-content">
-
                 {this.state.screenState === ScreenStateEnum.RoundResults && <div className="sub-menu">
                     <SubMenu onLeaveGame={this.openLeaveGameDialog} />
                 </div>}
 
-                {this.state.username &&
-                    <div className="text username" onClick={() => this.handleClickOpen('Введите имя:', 'text', this.updateUsername)}>
-                        Игрок: {this.state.username}
-                        {this.state.screenState === ScreenStateEnum.Menu &&
-                            <EditIcon fontSize="small" className="edit-icon" />}
-                    </div>}
-
-                {this.state.screenState !== ScreenStateEnum.RoundResults &&
-                    this.state.screenState !== ScreenStateEnum.GameBoard &&
-                    <div className="text user-message">{this.state.messageForUser}</div>}
-
-                {this.state.screenState === ScreenStateEnum.Menu &&
-                    <HomeScreen
-                        onCreateGame={this.getCardSets}
-                        onJoinGame={() => this.handleClickOpen('Введите код игры:', 'number', this.joinGame)}
-                        onCheckSuperUser={() => this.handleClickOpen('Введите пароль:', 'password', this.checkSuperUserPassword)}
-                        onShowAuthors={() => this.setState({ screenState: ScreenStateEnum.Authors })}></HomeScreen>}
-
-                {this.state.screenState === ScreenStateEnum.WaitingUsers &&
-                    <WaitingUsersScreen
-                        gameId={this.state.gameId}
-                        usersList={this.state.usersList}
-                        onStartGame={this.startGame}></WaitingUsersScreen>}
-
                 {this.state.screenState === ScreenStateEnum.Game &&
                     <ImageCardsSet
                         cards={this.state.userCards}
-                        isResultsAvailable={this.state.isAllCardsSended && this.state.username === this.state.activePlayer}
+                        isResultsAvailable={this.state.isAllCardsSended && this.props.username === this.state.activePlayer}
                         onSendCard={this.state.isGuessingMode ?
                             this.voteForCard :
                             this.selectCard}
@@ -632,21 +334,18 @@ export class Game extends Component<{}, State> {
                         isShowVoteMode={this.state.isShowVoteMode}></ImageCardsSet>}
 
                 {this.state.screenState === ScreenStateEnum.RoundResults &&
+                    this.state.roundResults &&
                     <RoundResultsScreen
-                        gameId={this.state.gameId}
+                        gameId={this.props.gameId}
                         results={this.state.roundResults}
                         onFinishRound={this.finishRound}
                         onGameBoardShow={this.showGameboard}></RoundResultsScreen>}
 
                 {this.state.screenState === ScreenStateEnum.GameBoard &&
                     <GameBoardScreen
-                        gameId={this.state.gameId}
+                        gameId={this.props.gameId}
                         results={this.state.roundResults}
                         onGameBoardClose={this.closeGameboard}></GameBoardScreen>}
-
-                {this.state.screenState === ScreenStateEnum.Authors &&
-                    <AuthorsScreen
-                        authors={this.state.authors}></AuthorsScreen>}
 
                 {this.state.screenState === ScreenStateEnum.Loading && <div>
                     <div className="text">Загрузка...</div>
@@ -655,22 +354,10 @@ export class Game extends Component<{}, State> {
                     </div>
                 </div>}
 
-                <InputDialog open={this.state.inputDialogConfig.open}
-                    header={this.state.inputDialogConfig.header}
-                    inputType={this.state.inputDialogConfig.inputType}
-                    onClose={this.handleInputDialogClose}
-                    onSubmit={this.state.inputDialogConfig.onSubmit} />
-
                 <SubmitDialog open={this.state.submitDialogConfig.open}
                     header={this.state.submitDialogConfig.header}
                     onClose={this.state.submitDialogConfig.onClose}
                     onSubmit={this.state.submitDialogConfig.onSubmit} />
-
-                <CheckboxDialog open={this.state.checkboxDialogConfig.open}
-                    header={this.state.checkboxDialogConfig.header}
-                    values={this.state.cardSets}
-                    onClose={this.handleCheckboxDialogClose}
-                    onSubmit={this.state.checkboxDialogConfig.onSubmit} />
             </div>
         )
     }

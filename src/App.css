@@ -37,6 +37,13 @@ html, body, #root, #root>div {
   max-height: 580px;
 }
 
+.main-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
 @media (max-height: 670px) {
   .App-header {
     flex-direction: row;

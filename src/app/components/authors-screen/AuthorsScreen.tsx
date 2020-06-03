@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import './AuthorsScreen.css';
 import { IAuthorModel } from '../../models/author.model';
 
-type AuthorsScreenProps = {
+type AuthorsState = {
     authors: IAuthorModel[]
 }
 
-export class AuthorsScreen extends Component<AuthorsScreenProps> {
-    constructor(props: Readonly<AuthorsScreenProps>) {
+export default class AuthorsScreen extends Component<{}, AuthorsState> {
+    constructor(props: Readonly<{}>) {
         super(props);
-        console.log(props);
+        this.state = {
+            authors: []
+        };
     }
 
     render() {
@@ -17,7 +19,7 @@ export class AuthorsScreen extends Component<AuthorsScreenProps> {
             <div className="text users-points">
                 <div>Художники и иллюстраторы:</div>
                 <div className="authors-list">
-                    {this.props.authors.map((el, i) =>
+                    {this.state.authors.map((el, i) =>
                         <div key={i} className="author">
                             <a href={el.link}>{el.name}</a>
                             <div className="cards-block">

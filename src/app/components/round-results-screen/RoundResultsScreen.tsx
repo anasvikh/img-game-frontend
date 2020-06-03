@@ -13,7 +13,7 @@ type RoundResultsScreenProps = {
 export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
     constructor(props: Readonly<RoundResultsScreenProps>) {
         super(props);
-        console.log(props);
+        console.log('RoundResultsScreen', props);
     }
 
     render() {

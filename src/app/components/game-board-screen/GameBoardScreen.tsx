@@ -21,7 +21,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
         for (let i = 0; i < 40; i++) {
             const element = this.props.results?.resultsList
                 .map(el => {
-                    el.totalPoints = el.totalPoints % 39 === 0 ? 1 : el.totalPoints % 40; // идем на следующий круг
+                    el.totalPoints = el.totalPoints % 39 === 0 ? 1 : el.totalPoints % 39; // идем на следующий круг
                     return el;
                 })
                 .filter(x => x.totalPoints === i);
@@ -34,15 +34,15 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                     <img className="board-background" src={`${process.env.REACT_APP_API_URL}/images/gameboard.jpg`} />
                     {
                         results.map((usersList, pointNumber) => {
-                            return <div className={`point point${pointNumber}`}>
+                            return <div className={`point point${pointNumber}`} key={pointNumber}>
                                 {usersList.map((user, userNumber) => {
                                     return <Zoom
                                         in={!!user}
-                                        style={{ transitionDelay: "300ms" }}>
+                                        style={{ transitionDelay: "300ms" }}
+                                        key={userNumber}>
                                         <div>
                                             <Tooltip title={user.username} disableFocusListener disableTouchListener>
-                                                <div key={userNumber}
-                                                    className={`player player${userNumber}`}>
+                                                <div className={`player player${userNumber}`}>
                                                     <img src={require(`../../../assets/svg/chips/chip-${user.chipColor}.svg`)} />
                                                 </div>
                                             </Tooltip>
