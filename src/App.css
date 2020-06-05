@@ -33,7 +33,7 @@ html, body, #root, #root>div {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  margin: 0 10px 10px;
   max-height: 580px;
 }
 

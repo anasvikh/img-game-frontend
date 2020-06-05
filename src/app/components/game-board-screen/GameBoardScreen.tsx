@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { Button, Zoom, Tooltip } from '@material-ui/core';
 import './GameBoardScreen.css'
 import { IRoundResultsModel, IPlayerResultsModel } from '../../models/roundResults.model';
+import { IGameboardPointModel } from '../../models/gameboardPoint.model';
 
 type GameBoardScreenProps = {
     gameId: number | null,
     results?: IRoundResultsModel,
     onGameBoardClose: any,
 }
+
+const pointsPositions: number[] = [36,31,26,21,16,11,6,1,2,3,4,5,10,9,8,7,12,13,14,15,20,19,18,17,22,23,24,25,30,29,28,27,32,33,34,35,39,38,37];
 
 export class GameBoardScreen extends Component<GameBoardScreenProps> {
     constructor(props: Readonly<GameBoardScreenProps>) {
@@ -16,38 +19,37 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
     }
 
     render() {
-        var results: IPlayerResultsModel[][] = [];
+        var results: IGameboardPointModel[] = [];
 
-        for (let i = 0; i < 40; i++) {
+        for (let i = 1; i < 40; i++) {
             const element = this.props.results?.resultsList
                 .map(el => {
                     el.totalPoints = el.totalPoints % 39 === 0 ? 1 : el.totalPoints % 39; // идем на следующий круг
                     return el;
                 })
                 .filter(x => x.totalPoints === i);
-            results.push(element ? element : []);
+
+            const point: IGameboardPointModel = {
+                players: element ? element : [],
+                pointNumber: i,
+                pointPosition: pointsPositions[i-1]
+            };
+            results.push(point);
         }
 
         return (
             this.props.results && <div className="main-menu game-board-screen">
                 <div className="game-board">
-                    <img className="board-background" src={`${process.env.REACT_APP_API_URL}/images/gameboard.jpg`} />
                     {
-                        results.map((usersList, pointNumber) => {
-                            return <div className={`point point${pointNumber}`} key={pointNumber}>
-                                {usersList.map((user, userNumber) => {
-                                    return <Zoom
-                                        in={!!user}
-                                        style={{ transitionDelay: "300ms" }}
-                                        key={userNumber}>
-                                        <div>
-                                            <Tooltip title={user.username} disableFocusListener disableTouchListener>
-                                                <div className={`player player${userNumber}`}>
-                                                    <img src={require(`../../../assets/svg/chips/chip-${user.chipColor}.svg`)} />
-                                                </div>
-                                            </Tooltip>
+                        results.sort((a, b) => a.pointPosition - b.pointPosition).map((point, pointPosition) => {
+                            return <div className={`point point${point.pointNumber}`} key={pointPosition}>
+                                <div className="point-number">{point.pointNumber}</div>
+                                {point.players.map((player, playerNumber) => {
+                                    return <Tooltip title={player.username} disableFocusListener disableTouchListener>
+                                        <div className={`player player${playerNumber}`} key={playerNumber}>
+                                            <img src={require(`../../../assets/svg/chips/${player.chipColor}.svg`)} />
                                         </div>
-                                    </Zoom>
+                                    </Tooltip>
                                 })}
                             </div>
                         })
