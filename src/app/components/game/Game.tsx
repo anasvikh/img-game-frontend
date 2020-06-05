@@ -101,9 +101,11 @@ export default class Game extends Component<GameProps, GameState> {
                 });
                 this.props.onMessageReceived(error);
             } else {
+                const message = isAllCardsSended ? 'Все проголосовали. Покажи свою карту игрокам' : 'Выбор принят. Подожди остальных игроков';
                 this.setState({
                     isAllCardsSended,
                 });
+                this.props.onMessageReceived(message);
             }
         });
 
