@@ -10,7 +10,7 @@ type GameBoardScreenProps = {
     onGameBoardClose: any,
 }
 
-const pointsPositions: number[] = [36,31,26,21,16,11,6,1,2,3,4,5,10,9,8,7,12,13,14,15,20,19,18,17,22,23,24,25,30,29,28,27,32,33,34,35,39,38,37];
+const pointsPositions: number[] = [36, 31, 26, 21, 16, 11, 6, 1, 2, 3, 4, 5, 10, 9, 8, 7, 12, 13, 14, 15, 20, 19, 18, 17, 22, 23, 24, 25, 30, 29, 28, 27, 32, 33, 34, 35, 39, 38, 37];
 
 export class GameBoardScreen extends Component<GameBoardScreenProps> {
     constructor(props: Readonly<GameBoardScreenProps>) {
@@ -32,7 +32,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
             const point: IGameboardPointModel = {
                 players: element ? element : [],
                 pointNumber: i,
-                pointPosition: pointsPositions[i-1]
+                pointPosition: pointsPositions[i - 1]
             };
             results.push(point);
         }
@@ -45,7 +45,13 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                             return <div className={`point point${point.pointNumber}`} key={pointPosition}>
                                 <div className="point-number">{point.pointNumber}</div>
                                 {point.players.map((player, playerNumber) => {
-                                    return <Tooltip title={player.username} disableFocusListener disableTouchListener>
+                                    return <Tooltip
+                                        title={player.username}
+                                        aria-label="add"
+                                        key={playerNumber}
+                                        style={{ zIndex: 100 }}
+                                        disableFocusListener
+                                        disableTouchListener>
                                         <div className={`player player${playerNumber}`} key={playerNumber}>
                                             <img src={require(`../../../assets/svg/chips/${player.chipColor}.svg`)} />
                                         </div>

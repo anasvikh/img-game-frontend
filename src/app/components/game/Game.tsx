@@ -101,7 +101,9 @@ export default class Game extends Component<GameProps, GameState> {
                 });
                 this.props.onMessageReceived(error);
             } else {
-                const message = isAllCardsSended ? 'Все проголосовали. Покажи свою карту игрокам' : 'Выбор принят. Подожди остальных игроков';
+                const message = isAllCardsSended ?
+                    'Все проголосовали. Покажи свою карту игрокам' :
+                    'Выбор принят. Подожди остальных игроков';
                 this.setState({
                     isAllCardsSended,
                 });
@@ -157,7 +159,7 @@ export default class Game extends Component<GameProps, GameState> {
         if (prevState.screenState === this.state.screenState) return;
 
         const screensWithoutUserMessage = [
-            ScreenStateEnum.RoundResults, 
+            ScreenStateEnum.RoundResults,
             ScreenStateEnum.GameBoard
         ];
         const userMessageVisibility = !screensWithoutUserMessage.includes(this.state.screenState);
