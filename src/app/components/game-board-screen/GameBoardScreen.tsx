@@ -42,7 +42,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                 <div className="game-board">
                     {
                         results.sort((a, b) => a.pointPosition - b.pointPosition).map((point, pointPosition) => {
-                            return <div className={`point point${point.pointNumber}`} key={pointPosition}>
+                            return <div className={`point point${point.pointNumber} ${point.pointPosition}`} key={pointPosition}>
                                 <div className="point-number">{point.pointNumber}</div>
                                 {point.players.map((player, playerNumber) => {
                                     return <Zoom
