@@ -46,7 +46,7 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                                         <div className="card-number">{this.props.results.activePlayCard.numberInSet}</div>}
                                     <img
                                         className="card active-card"
-                                        src={`/${this.props.results.activePlayCard.src}`}></img>
+                                        src={`http://3.22.164.241:88${this.props.results.activePlayCard.src}`}></img>
                                 </div>
                             </div>
                         </Zoom>
