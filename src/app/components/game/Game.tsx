@@ -434,9 +434,10 @@ export class Game extends Component<{}, State> {
     }
 
     getSuperUserPassword = (): string => {
-        const date = new Date();
-        const password = date.getDate() + date.getHours() + Math.pow(date.getDay(), 2);
-        return password.toString();
+        //const date = new Date();
+        //const password = date.getDate() + date.getHours() + Math.pow(date.getDay(), 2);
+        //return password.toString();
+        return 'секрет';
     }
 
     showGameboard = () => {
