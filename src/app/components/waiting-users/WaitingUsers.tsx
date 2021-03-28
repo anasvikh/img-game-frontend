@@ -7,6 +7,7 @@ type WaitingUsersProps = {
     hub: any;
     history: any;
     gameId: number | null,
+    isGameCreator: boolean
 }
 
 type WaitingUsersState = {
@@ -62,13 +63,13 @@ export default class WaitingUsers extends Component<WaitingUsersProps, WaitingUs
                         {this.state.usersList.map(el => <div key={el}> {el} </div>)}
                     </div>
                 </div>
-                <Button
+                {this.props.isGameCreator && <Button
                     variant="outlined"
                     size="large"
                     color="primary"
-                    className="app-button start-game"
+                    className="app-button"
                     onClick={this.startGame}>
-                    Начать игру</Button>
+                    Начать игру</Button>}
             </div>
         )
     }

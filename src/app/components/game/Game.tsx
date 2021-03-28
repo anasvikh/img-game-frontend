@@ -104,12 +104,14 @@ export default class Game extends Component<GameProps, GameState> {
                 this.setState({
                     isAllCardsSended,
                 });
+                let message = '';
                 if (username === this.props.username) {
-                    const message = isAllCardsSended ?
-                        'Все проголосовали. Покажи свою карту игрокам' :
-                        'Выбор принят. Подожди остальных игроков';
-                    this.props.onMessageReceived(message);
+                    message = 'Выбор принят. Подожди остальных игроков';
                 }
+                if (isAllCardsSended) {
+                    message = 'Все проголосовали. Покажи свою карту игрокам';
+                }
+                this.props.onMessageReceived(message);
             }
         });
 
@@ -134,7 +136,7 @@ export default class Game extends Component<GameProps, GameState> {
                     'Теперь попытайся угадать карту ведущего.' :
                 this.props.username === activePlayer ?
                     'Ты ведущий. Выбери карту, придумай ассоциацию и сообщи ее другим игрокам.' :
-                    'Твоя задача - выбрать карту, которая максимально подходит к ассоциации ведущего.';
+                    `Твоя задача - выбрать карту, которая максимально подходит к ассоциации ведущего.`;
             this.props.onMessageReceived(messageForUser);
             this.setState({
                 userCards: result,
@@ -157,17 +159,16 @@ export default class Game extends Component<GameProps, GameState> {
             }
         });
         this.props.hub.on('someoneLeaveGame', (isAllCardsSended: boolean, roundType: any, needNewRound: boolean, needRoundResults: boolean) => {
-            alert(`Игрок покинул игру! ${isAllCardsSended}`)
             if (needNewRound) {
                 this.getCards();
             } else if (needRoundResults) {
                 this.getRoundResults();
-            }else if (isAllCardsSended) {
+            } else if (isAllCardsSended) {
                 this.finishRound();
             } else {
-                    this.setState({
-                        loadingLogs: [...this.state.loadingLogs] //todo add logs (check)
-                    })
+                this.setState({
+                    loadingLogs: [...this.state.loadingLogs] //todo add logs (check)
+                })
             }
         });
     }

@@ -16,6 +16,7 @@ type State = {
     gameId: number | null,
     messageForUser: string,
     username: string,
+    isGameCreator: boolean,
 
     isUsernameEditable: boolean;
     isUserMessageVisible: boolean;
@@ -37,6 +38,7 @@ export class Content extends Component<{}, State> {
             gameId: this.restoreGameId(),
             messageForUser: '',
             username: localStorage.getItem('IMG_username') || this.generateUsername(),
+            isGameCreator: false,
 
             isUsernameEditable: false,
             isUserMessageVisible: true,
@@ -134,7 +136,7 @@ export class Content extends Component<{}, State> {
                                     <Home {...props}
                                         hub={this.state.hubConnection}
                                         username={this.state.username}
-                                        onGameIdReceived={(gameId: number) => this.setState({ gameId })}
+                                        onGameIdReceived={(gameId: number, isGameCreator: boolean) => this.setState({ gameId, isGameCreator })}
                                         onMessageReceived={(messageForUser: string) => this.setState({ messageForUser })}
                                         onUsernameEditableChange={(isUsernameEditable: boolean) => this.setState({ isUsernameEditable })} />
                                 }
@@ -143,7 +145,8 @@ export class Content extends Component<{}, State> {
                                 render={(props) =>
                                     <WaitingUsers {...props}
                                         hub={this.state.hubConnection}
-                                        gameId={this.state.gameId} />
+                                        gameId={this.state.gameId} 
+                                        isGameCreator={this.state.isGameCreator}/>
                                 }
                             />
                             <Route exact path="/game"

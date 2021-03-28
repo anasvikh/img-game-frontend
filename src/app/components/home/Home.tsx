@@ -72,7 +72,7 @@ export default class Home extends Component<HomeProps, HomeState> {
 
         this.props.hub.on('createGame', (gameId: number, username: string, error: any) => {
             console.log(gameId, username, error);
-            this.props.onGameIdReceived(gameId);
+            this.props.onGameIdReceived(gameId, true);
             this.props.onMessageReceived('Игра создана');
             this.props.onUsernameEditableChange(false);
             this.closeCheckboxDialog();
@@ -85,7 +85,7 @@ export default class Home extends Component<HomeProps, HomeState> {
 
             if (success) {
                 this.props.onMessageReceived('Вы присоединились к игре');
-                this.props.onGameIdReceived(gameId);
+                this.props.onGameIdReceived(gameId, false);
                 this.props.onUsernameEditableChange(false);
                 localStorage.setItem('IMG_game', gameId.toString());
                 this.props.history.push('/waiting-users');
