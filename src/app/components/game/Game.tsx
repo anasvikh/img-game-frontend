@@ -101,13 +101,15 @@ export default class Game extends Component<GameProps, GameState> {
                 });
                 this.props.onMessageReceived(error);
             } else {
-                const message = isAllCardsSended ?
-                    'Все проголосовали. Покажи свою карту игрокам' :
-                    'Выбор принят. Подожди остальных игроков';
                 this.setState({
                     isAllCardsSended,
                 });
-                this.props.onMessageReceived(message);
+                if (username === this.props.username) {
+                    const message = isAllCardsSended ?
+                        'Все проголосовали. Покажи свою карту игрокам' :
+                        'Выбор принят. Подожди остальных игроков';
+                    this.props.onMessageReceived(message);
+                }
             }
         });
 
@@ -151,6 +153,21 @@ export default class Game extends Component<GameProps, GameState> {
                 localStorage.removeItem('IMG_screen_state');
                 localStorage.removeItem('IMG_round_results');
                 this.props.history.push('/');
+                this.props.onMessageReceived('');
+            }
+        });
+        this.props.hub.on('someoneLeaveGame', (isAllCardsSended: boolean, roundType: any, needNewRound: boolean, needRoundResults: boolean) => {
+            alert(`Игрок покинул игру! ${isAllCardsSended}`)
+            if (needNewRound) {
+                this.getCards();
+            } else if (needRoundResults) {
+                this.getRoundResults();
+            }else if (isAllCardsSended) {
+                this.finishRound();
+            } else {
+                    this.setState({
+                        loadingLogs: [...this.state.loadingLogs] //todo add logs (check)
+                    })
             }
         });
     }
@@ -223,7 +240,7 @@ export default class Game extends Component<GameProps, GameState> {
         console.log('Получение результатов раунда');
 
         this.props.hub
-            .invoke('getRoundResults', this.props.username, this.props.gameId)
+            .invoke('getRoundResults', this.props.gameId)
             .catch((err: any) => console.error(err));
     };
 
@@ -326,9 +343,9 @@ export default class Game extends Component<GameProps, GameState> {
     render() {
         return (
             <div className="App-content">
-                {this.state.screenState === ScreenStateEnum.RoundResults && <div className="sub-menu">
+                <div className="sub-menu">
                     <SubMenu onLeaveGame={this.openLeaveGameDialog} />
-                </div>}
+                </div>
 
                 {this.state.screenState === ScreenStateEnum.Game &&
                     <ImageCardsSet

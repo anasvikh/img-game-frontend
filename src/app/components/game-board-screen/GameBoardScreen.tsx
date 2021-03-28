@@ -65,7 +65,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                     variant="outlined"
                     size="large"
                     color="primary"
-                    className="app-button start-game"
+                    className="app-button close-game-board-button"
                     onClick={this.props.onGameBoardClose}>Ок</Button>
             </div>
         )
