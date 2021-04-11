@@ -62,13 +62,27 @@
     height: inherit;
 }
 
+.point1 {
+    width: 18.5vh;
+}
+
 @media (max-width: 768px) {
     .game-board {
+        height: 80vh;
         width: 100%;
     }
 
+    .point {
+        width: 14vw;
+        height: 14vw;
+    }
+
+    .point1 {
+        width: 33vw;
+    }
+
     .board-background {
-        --height: 80vh;
+        height: 80vh;
         width: 100%;
     }
 }
@@ -83,8 +97,4 @@
         position: absolute;
         bottom: 180px;
     }
-}
-
-.point1 {
-    width: 18.5vh;
 }

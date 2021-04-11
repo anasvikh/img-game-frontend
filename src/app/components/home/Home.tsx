@@ -124,9 +124,10 @@ export default class Home extends Component<HomeProps, HomeState> {
     }
 
     getSuperUserPassword = (): string => {
-        const date = new Date();
-        const password = date.getDate() + date.getHours() + Math.pow(date.getDay(), 2);
-        return password.toString();
+        // const date = new Date();
+        // const password = date.getDate() + date.getHours() + Math.pow(date.getDay(), 2);
+        // return password.toString();
+        return 'секрет';
     }
 
     openInputDialog = (header: string, inputType?: string, onSubmit?: any) => {
