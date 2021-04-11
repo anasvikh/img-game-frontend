@@ -70,9 +70,9 @@ export default class Home extends Component<HomeProps, HomeState> {
             });
         });
 
-        this.props.hub.on('createGame', (gameId: number, username: string, error: any) => {
-            console.log(gameId, username, error);
-            this.props.onGameIdReceived(gameId, true);
+        this.props.hub.on('createGame', (gameId: number, error: any) => {
+            console.log(gameId, error);
+            this.props.onGameIdReceived(gameId);
             this.props.onMessageReceived('Игра создана');
             this.props.onUsernameEditableChange(false);
             this.closeCheckboxDialog();
@@ -80,12 +80,11 @@ export default class Home extends Component<HomeProps, HomeState> {
             this.props.history.push('/waiting-users');
         });
 
-        this.props.hub.on('joinGame', (gameId: number, usersList: string[], success: boolean, message: string) => {
-            console.log(gameId, usersList, success);
-
+        this.props.hub.on('joinGame', (gameId: number, success: boolean, message: string) => {
+            console.log(`try to join (${gameId}, ${success}, ${message})`)
             if (success) {
                 this.props.onMessageReceived('Вы присоединились к игре');
-                this.props.onGameIdReceived(gameId, false);
+                this.props.onGameIdReceived(gameId);
                 this.props.onUsernameEditableChange(false);
                 localStorage.setItem('IMG_game', gameId.toString());
                 this.props.history.push('/waiting-users');
@@ -180,9 +179,9 @@ export default class Home extends Component<HomeProps, HomeState> {
                     className="app-button"
                     onClick={() => this.openInputDialog('Введите код игры:', 'number', this.joinGame)}>
                     Присоединиться</Button>
-                <Link to="/authors">
+                {/* <Link to="/authors">
                     <Button size="large" color="primary" className="app-button">Авторы</Button>
-                </Link>
+                </Link> */}
                 <div className="secret-field" onClick={() => this.openInputDialog('Введите пароль:', 'password', this.checkSuperUserPassword)}>
                 </div>
 

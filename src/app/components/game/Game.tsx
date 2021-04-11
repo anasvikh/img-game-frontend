@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Game.css'
-import { ScreenStateEnum } from '../../models/enums/screen-state.enum';
+import { ScreenStateEnum, StatusType } from '../../models/enums/screen-state.enum';
 import { ImageCardsSet } from '../Image-cards-set/ImageCardsSet';
 import { ICardModel } from '../../models/card.model';
 import { RoundResultsScreen } from '../round-results-screen/RoundResultsScreen';
@@ -63,11 +63,14 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     componentDidMount = () => {
-        this.checkActiveGame();
-        this.props.hub.on('checkActiveGame', (gameId: number, username: string, isGameActive: boolean) => {
-            console.log('check game results: ', gameId, username, isGameActive);
+        console.log('game page');
+        this.checkGameStatus();
+        this.props.hub.on('checkGameStatus', (gameId: number, username: string, status: StatusType, isGameCreator: boolean) => {
+            console.log('check game results: ', gameId, username, status);
             const isGuessingMode = localStorage.getItem('IMG_is_guessing_mode');
-            if (isGameActive && isGuessingMode !== null) {
+            console.log('pre restore game');
+            if (status == StatusType.Active && isGuessingMode !== null) {
+                console.log('restore game');
                 this.setState({
                     isGuessingMode: isGuessingMode === 'true'
                 });
@@ -189,7 +192,7 @@ export default class Game extends Component<GameProps, GameState> {
         this.props.onUserMessageVisibilityChange(true);
     }
 
-    checkActiveGame = () => {
+    checkGameStatus = () => {
         const game = localStorage.getItem('IMG_game');
         const username = localStorage.getItem('IMG_username');
 
@@ -197,7 +200,7 @@ export default class Game extends Component<GameProps, GameState> {
         if (!game || !username) return;
 
         this.props.hub
-            .invoke('checkActiveGame', +game, username)
+            .invoke('checkGameStatus', +game, username)
             .catch((err: any) => console.error(err));
     };
 

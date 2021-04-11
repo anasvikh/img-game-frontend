@@ -16,7 +16,6 @@ type State = {
     gameId: number | null,
     messageForUser: string,
     username: string,
-    isGameCreator: boolean,
 
     isUsernameEditable: boolean;
     isUserMessageVisible: boolean;
@@ -38,7 +37,6 @@ export class Content extends Component<{}, State> {
             gameId: this.restoreGameId(),
             messageForUser: '',
             username: localStorage.getItem('IMG_username') || this.generateUsername(),
-            isGameCreator: false,
 
             isUsernameEditable: false,
             isUserMessageVisible: true,
@@ -115,7 +113,6 @@ export class Content extends Component<{}, State> {
     render() {
         return (
             <div className="App-content">
-
                 {this.state.username &&
                     <div className="text username"
                         onClick={() => this.state.isUsernameEditable && this.openInputDialog('Введите имя:', 'text', this.updateUsername)}>
@@ -136,7 +133,7 @@ export class Content extends Component<{}, State> {
                                     <Home {...props}
                                         hub={this.state.hubConnection}
                                         username={this.state.username}
-                                        onGameIdReceived={(gameId: number, isGameCreator: boolean) => this.setState({ gameId, isGameCreator })}
+                                        onGameIdReceived={(gameId: number) => this.setState({ gameId })}
                                         onMessageReceived={(messageForUser: string) => this.setState({ messageForUser })}
                                         onUsernameEditableChange={(isUsernameEditable: boolean) => this.setState({ isUsernameEditable })} />
                                 }
@@ -145,8 +142,7 @@ export class Content extends Component<{}, State> {
                                 render={(props) =>
                                     <WaitingUsers {...props}
                                         hub={this.state.hubConnection}
-                                        gameId={this.state.gameId} 
-                                        isGameCreator={this.state.isGameCreator}/>
+                                        gameId={this.state.gameId}/>
                                 }
                             />
                             <Route exact path="/game"
