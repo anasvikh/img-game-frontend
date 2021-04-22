@@ -53,7 +53,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                                         disableFocusListener
                                         disableTouchListener>
                                         <div className={`player player${playerNumber}`} key={playerNumber}>
-                                            <img src={require(`../../../assets/svg/chips/${player.chipColor}.svg`)} />
+                                            <img src={require(`../../../assets/svg/new-chips/chip (${player.chipColor}).svg`)} />
                                         </div>
                                     </Tooltip>
                                 })}

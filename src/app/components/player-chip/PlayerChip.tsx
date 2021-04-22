@@ -22,7 +22,7 @@ export class PlayerChip extends Component<PlayerChipProps> {
                 disableFocusListener
                 disableTouchListener>
                 <div className={`player-chip`}>
-                    <img src={require(`../../../assets/svg/chips/${this.props.player.chipId}.svg`)} />
+                    <img src={require(`../../../assets/svg/new-chips/chip (${this.props.player.chipId}).svg`)} />
                 </div>
             </Tooltip>
         )

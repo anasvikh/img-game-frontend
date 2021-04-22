@@ -124,7 +124,7 @@ export default class WaitingUsers extends Component<WaitingUsersProps, WaitingUs
                                                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                                             <div className='player-card'>
                                                                 <div className={`player`}>
-                                                                    <img src={require(`../../../assets/svg/chips/${user.chipId}.svg`)} />
+                                                                    <img src={require(`../../../assets/svg/new-chips/chip (${user.chipId}).svg`)} />
                                                                 </div>
                                                                 {user.name}
                                                             </div>
