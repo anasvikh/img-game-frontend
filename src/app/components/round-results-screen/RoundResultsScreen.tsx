@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Zoom } from '@material-ui/core';
 import './RoundResultsScreen.css'
 import { IRoundResultsModel } from '../../models/roundResults.model';
+import { PlayerChip } from '../player-chip/PlayerChip';
 
 type RoundResultsScreenProps = {
     gameId: number | null,
@@ -23,17 +24,20 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                     <div>Результаты раунда:</div>
                     <div className="results-list">
                         {this.props.results.resultsList.map((el, i) =>
-                            <div key={i}>
-                                Игрок {el.username} делает ход на {el.roundPoints}
+                            <div className={`${el.roundPoints > 0 ? 'forward' : el.roundPoints < 0 ? 'back' : ''}`} key={i}>
+                                {el.username} делает ход на {el.roundPoints}
                             </div>
                         )}
                     </div>
                 </div>
                 <Button
-                    size="large"
                     color="primary"
                     className="app-button"
-                    onClick={this.props.onGameBoardShow}>Игровое поле</Button>
+                    onClick={this.props.onGameBoardShow}>
+                    <div style={{ fontSize: 20, marginBottom: 10 }}>&#128073;&#127995;</div>
+                        Игровое поле
+                    <div style={{ fontSize: 20, marginBottom: 10 }}>&#128072;&#127995;</div>
+                </Button>
                 <div>
                     <div className="text">
                         <Zoom
@@ -47,6 +51,10 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                                     <img
                                         className="card active-card"
                                         src={`${process.env.REACT_APP_API_URL}${this.props.results.activePlayCard.src}`}></img>
+                                    <div className="voted-players">
+                                        {this.props.results.activePlayCard.players
+                                            .map(player => <PlayerChip player={player} key={player.name}></PlayerChip>)}
+                                    </div>
                                 </div>
                             </div>
                         </Zoom>

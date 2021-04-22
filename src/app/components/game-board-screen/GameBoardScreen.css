@@ -41,6 +41,7 @@
 
     color: #add8e682;
     background-color: #f0f8ff14;
+    background-color: #f0f8ff0a;
     border: 1px solid transparent;
 
 }
@@ -84,6 +85,12 @@
     .board-background {
         height: 80vh;
         width: 100%;
+    }
+}
+
+@media (max-height: 700px) {
+    .game-board {
+        max-width: 373px;
     }
 }
 

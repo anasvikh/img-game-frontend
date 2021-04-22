@@ -1,0 +1,12 @@
+.player-chip {
+    width: 5vh;
+    height: 6vh;
+    z-index: 200;
+    top: 0vh;
+    left: 0vh;
+}
+
+.player-chip img {
+    width: inherit;
+    height: inherit;
+}

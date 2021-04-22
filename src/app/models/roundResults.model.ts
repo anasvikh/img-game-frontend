@@ -1,8 +1,8 @@
 import { ChipColorEnum } from './enums/chip-color.enum';
-import { ICardModel } from './card.model';
+import { ICardResultsModel } from './card.model';
 
 export interface IRoundResultsModel {
-    activePlayCard: ICardModel;
+    activePlayCard: ICardResultsModel;
     resultsList: IPlayerResultsModel[];
 }
 

@@ -10,6 +10,7 @@
 .results-list {
     max-height: 25vh;
     overflow-y: hidden;
+    margin-top: 5px;
 }
 
 .card-wrapper {
@@ -24,7 +25,23 @@
     object-fit: cover;
 }
 
+.voted-players {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    bottom: 0;
+    right: -7vh;
+}
 
 .users-points {
     margin: 10px 0;
 }
+
+.forward {
+    color: #adff98;
+}
+
+.back {
+    color: #ff9898;
+}
+

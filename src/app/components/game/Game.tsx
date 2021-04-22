@@ -8,6 +8,7 @@ import { IRoundResultsModel } from '../../models/roundResults.model';
 import { SubmitDialog } from '../submit-dialog/submitDialog';
 import SubMenu from '../submenu/Submenu';
 import { GameBoardScreen } from '../game-board-screen/GameBoardScreen';
+import { Loader } from '../loader/Loader';
 
 type GameProps = {
     hub: any,
@@ -377,9 +378,9 @@ export default class Game extends Component<GameProps, GameState> {
                         onGameBoardClose={this.closeGameboard}></GameBoardScreen>}
 
                 {this.state.screenState === ScreenStateEnum.Loading && <div>
-                    <div className="text">Загрузка...</div>
+                    <Loader></Loader>
                     <div className="text log-list">
-                        {this.state.loadingLogs.map(el => <div key={el}>Игрок {el} сделал ход</div>)}
+                        {this.state.loadingLogs.map(el => <div key={el}>{el} делает выбор</div>)}
                     </div>
                 </div>}
 

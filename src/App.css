@@ -51,7 +51,8 @@ html, body, #root, #root>div {
   }
 
   .App-logo {
-    height: 45px;
+    height: 45px; 
+    transform: scale(-1, 1);
     margin-left: unset;
   }
 

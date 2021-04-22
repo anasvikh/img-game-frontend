@@ -5,6 +5,7 @@ import { ScreenStateEnum, StatusType } from '../../models/enums/screen-state.enu
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { IUserModel } from '../../models/user.model';
 import SubMenu from '../submenu/Submenu';
+import { Loader } from '../loader/Loader';
 
 type WaitingUsersProps = {
     hub: any;
@@ -108,6 +109,7 @@ export default class WaitingUsers extends Component<WaitingUsersProps, WaitingUs
                     <SubMenu onLeaveGame={() => this.props.history.push('/')} />
                 </div>
                 <div className="game-info">
+                    <Loader></Loader>
                     <div className="text">Код игры: {this.props.gameId}</div>
                     <div className="text">
                         <div>Список игроков:</div>
