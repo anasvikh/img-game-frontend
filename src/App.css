@@ -34,7 +34,7 @@ html, body, #root, #root>div {
   display: flex;
   flex-direction: column;
   margin: 0 10px 10px;
-  max-height: 580px;
+  max-height: 600px;
 }
 
 .main-menu {
