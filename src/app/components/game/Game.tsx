@@ -346,7 +346,7 @@ export default class Game extends Component<GameProps, GameState> {
 
     render() {
         return (
-            <div className="App-content">
+            <div className="game">
                 <div className="sub-menu">
                     <SubMenu onLeaveGame={this.openLeaveGameDialog} />
                 </div>
