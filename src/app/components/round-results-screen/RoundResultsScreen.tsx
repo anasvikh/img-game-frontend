@@ -39,18 +39,18 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                     <div style={{ fontSize: 18, marginBottom: 6, marginLeft: 4 }}>&#128072;&#127995;</div>
                 </Button>
                 <div>
-                    <Zoom
-                        in={!!this.props.results.activePlayCard}
-                        style={{ transitionDelay: "300ms" }}>
-                        <div className="card-result">
-                            <div className="players-list">
-                                <div className="text">Ведущий<br></br>раунда:</div>
-                                <div className="card-owner">
-                                    {this.props.results.activePlayCard.players
-                                        .filter(x => x.isCardOwner)
-                                        .map(player => <PlayerChip player={player} key={player.name}></PlayerChip>)}
-                                </div>
+                    <div className="card-result">
+                        <div className="players-list">
+                            <div className="text">Ведущий<br></br>раунда:</div>
+                            <div className="card-owner">
+                                {this.props.results.activePlayCard.players
+                                    .filter(x => x.isCardOwner)
+                                    .map(player => <PlayerChip player={player} key={player.name}></PlayerChip>)}
                             </div>
+                        </div>
+                        <Zoom
+                            in={!!this.props.results.activePlayCard}
+                            style={{ transitionDelay: "300ms" }}>
                             <div className="card-wrapper">
                                 {this.props.results.activePlayCard.src.includes('Painters') &&
                                     <div className="card-number">{this.props.results.activePlayCard.numberInSet}</div>}
@@ -58,16 +58,16 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                                     className="card active-card"
                                     src={`${process.env.REACT_APP_API_URL}${this.props.results.activePlayCard.src}`}></img>
                             </div>
-                            <div className="players-list">
-                                <div className="text">Угадавшие<br></br>игроки:</div>
-                                <div className={`voted-players ${this.props.results.activePlayCard.players.length -1 > 5 ? 'two-columns' : ''}`}>
-                                    {this.props.results.activePlayCard.players
-                                        .filter(x => !x.isCardOwner)
-                                        .map(player => <PlayerChip player={player} key={player.name}></PlayerChip>)}
-                                </div>
+                        </Zoom>
+                        <div className="players-list">
+                            <div className="text">Угадавшие<br></br>игроки:</div>
+                            <div className={`voted-players ${this.props.results.activePlayCard.players.length - 1 > 5 ? 'two-columns' : ''}`}>
+                                {this.props.results.activePlayCard.players
+                                    .filter(x => !x.isCardOwner)
+                                    .map(player => <PlayerChip player={player} key={player.name}></PlayerChip>)}
                             </div>
                         </div>
-                    </Zoom>
+                    </div>
                 </div>
                 <Button
                     variant="outlined"
