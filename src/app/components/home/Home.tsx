@@ -37,9 +37,10 @@ export default class Home extends Component<HomeProps, HomeState> {
     constructor(props: Readonly<HomeProps>) {
         super(props);
         console.log(props);
+        const isSuperUser = localStorage.getItem('IMG_is_superuser') === 'true';
         this.state = {
             cardSets: [],
-            isSuperUser: false,
+            isSuperUser: isSuperUser,
             inputDialogConfig: {
                 open: false,
                 header: '',
@@ -116,6 +117,7 @@ export default class Home extends Component<HomeProps, HomeState> {
     checkSuperUserPassword = (password: string) => {
         this.closeInputDialog();
         if (password === this.getSuperUserPassword()) {
+            localStorage.setItem('IMG_is_superuser', 'true');
             alert('Ты суперпользователь! 0.0.1')
             this.setState({
                 isSuperUser: true
