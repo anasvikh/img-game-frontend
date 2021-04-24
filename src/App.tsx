@@ -21,7 +21,7 @@ function App() {
         <header className="App-header">
           <div style={{ position: 'relative', height: 'inherit' }}>
             <img src={logo} className="App-logo" alt="logo" />
-            <div className="App-version">v.0.0.1</div>
+            <div className="App-version">v.{process.env.REACT_APP_VERSION}</div>
           </div>
           <div className="App-name">Momentum</div>
         </header>
