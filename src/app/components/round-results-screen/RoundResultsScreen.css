@@ -13,24 +13,32 @@
     margin-top: 5px;
 }
 
-.card-wrapper {
-    position: relative;
-    width: 23.35vh;
-    margin: 0 auto;
-}
-
 .active-card {
     height: 35vh;
     width: inherit;
     object-fit: cover;
 }
 
-.voted-players {
-    position: absolute;
+.card-result {
+    display: flex;
+    flex-direction: row;
+}
+
+.players-list {
     display: flex;
     flex-direction: column;
-    bottom: 0;
-    right: -7vh;
+    align-items: center;
+    width: 14vh;
+}
+
+.voted-players {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.voted-players.two-columns {
+    width: 10vh;
 }
 
 .users-points {

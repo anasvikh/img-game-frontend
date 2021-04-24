@@ -116,7 +116,7 @@ export default class Home extends Component<HomeProps, HomeState> {
     checkSuperUserPassword = (password: string) => {
         this.closeInputDialog();
         if (password === this.getSuperUserPassword()) {
-            alert('Ты суперпользователь!')
+            alert('Ты суперпользователь! 0.0.1')
             this.setState({
                 isSuperUser: true
             })
