@@ -19,7 +19,10 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <div style={{ position: 'relative', height: 'inherit' }}>
+            <img src={logo} className="App-logo" alt="logo" />
+            <div className="App-version">v.0.0.1</div>
+          </div>
           <div className="App-name">Momentum</div>
         </header>
         <Content></Content>

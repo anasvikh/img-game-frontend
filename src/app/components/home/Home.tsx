@@ -118,7 +118,7 @@ export default class Home extends Component<HomeProps, HomeState> {
         this.closeInputDialog();
         if (password === this.getSuperUserPassword()) {
             localStorage.setItem('IMG_is_superuser', 'true');
-            alert('Ты суперпользователь! 0.0.1')
+            alert('Ты суперпользователь!')
             this.setState({
                 isSuperUser: true
             })

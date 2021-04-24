@@ -12,6 +12,19 @@ html, body, #root, #root>div {
 .App-logo {
   height: 70px;
   --margin-left: 20px;
+  z-index: 999;
+  position: relative;
+}
+
+.App-version {
+  position: absolute;
+  opacity: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 22px;
 }
 
 .App-name {
@@ -48,15 +61,56 @@ html, body, #root, #root>div {
   .App-header {
     flex-direction: row;
     padding-top: 20px;
+    height: 50px;
   }
 
   .App-logo {
     height: 45px; 
     transform: scale(-1, 1);
     margin-left: unset;
+    height: inherit;
   }
 
   .App-name {
     margin-left: 5px;
+    margin-top: 0;
   }
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.App-logo:hover {
+  animation: fadeout 3s linear normal 1;
+}
+
+.App-logo:hover + .App-version {
+  animation: fadein 3s linear normal 1;
 }
