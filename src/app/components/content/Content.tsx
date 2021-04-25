@@ -50,12 +50,16 @@ export class Content extends Component<{}, State> {
     }
 
     componentDidMount = () => {
-        const hubConnection = new signalR.HubConnectionBuilder().withUrl(`${process.env.REACT_APP_API_URL}/game`, {
-            skipNegotiation: true,
-            transport: signalR.HttpTransportType.WebSockets
-        }).build();
+        console.log('[ContentComponent] created.');
+        try {
+            console.log('[ContentComponent] try to create hub connection');
+            const hubConnection = new signalR.HubConnectionBuilder().withUrl(`${process.env.REACT_APP_API_URL}/game`, {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+            }).build();
 
-        hubConnection.start()
+            console.log('[ContentComponent] try to start hub connection');
+            hubConnection.start()
             .then(() => {
                 this.setState({ hubConnection });
                 console.log('Connection started!', this.state.hubConnection.state);
@@ -64,6 +68,10 @@ export class Content extends Component<{}, State> {
             .catch(() => console.log('Error while establishing connection :('));
 
         this.setState({ hubConnection });
+        }
+        catch(ex) {
+            console.log('[ContentComponent] error', ex);
+        }
     }
 
     restoreGameId() {

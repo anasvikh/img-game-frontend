@@ -15,6 +15,8 @@ function App() {
     },
   });
 
+  console.log('[AppComponent] created.');
+
   return (
     <MuiThemeProvider theme={theme}>
       <div className="App">
