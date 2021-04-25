@@ -64,6 +64,16 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     componentDidMount = () => {
+        window.addEventListener('load', function () {
+            console.log('game load');
+            window.history.pushState({}, '')
+        })
+
+        window.addEventListener('popstate', function () {
+            console.log('game popstate');
+            window.history.pushState({}, '')
+        })
+        
         console.log('game page');
         this.checkGameStatus();
         this.props.hub.on('checkGameStatus', (gameId: number, username: string, status: StatusType, isGameCreator: boolean) => {
@@ -149,7 +159,6 @@ export default class Game extends Component<GameProps, GameState> {
                 activePlayer
             });
             localStorage.setItem('IMG_screen_state', ScreenStateEnum.Game.toString());
-            console.log(`cards for round:`, result);
         });
 
         this.props.hub.on('leaveGame', (isSuccess: boolean) => {
