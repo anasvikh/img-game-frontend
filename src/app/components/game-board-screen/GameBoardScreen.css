@@ -12,13 +12,13 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: #090e18;
+    background-color: #151a22;
     max-width: 400px;
 }
 
 .board-background {
     height: 88vh;
-    background-color: #090e18;
+    background-color: #151a22;
 }
 
 .point {
