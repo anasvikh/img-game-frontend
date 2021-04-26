@@ -20,4 +20,4 @@ jobs:
                     password: ${{ secrets.DOCKER_PASSWORD }}
                     dockerfile: docker-staging/Dockerfile
                     repository: avikhlyaeva/img-game-frontend
-                    tags: user/app:staging
+                    tags: staging

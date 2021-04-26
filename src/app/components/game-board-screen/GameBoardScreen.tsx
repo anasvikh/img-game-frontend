@@ -24,7 +24,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
         for (let i = 1; i < 40; i++) {
             const element = this.props.results?.resultsList
                 .map(el => {
-                    el.totalPoints = el.totalPoints % 39 === 0 ? 1 : el.totalPoints % 40; // идем на следующий круг
+                    el.totalPoints = el.totalPoints % 39 === 0 ? 1 : el.totalPoints % 39; // идем на следующий круг
                     return el;
                 })
                 .filter(x => x.totalPoints === i);
@@ -42,18 +42,20 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                 <div className="game-board">
                     {
                         results.sort((a, b) => a.pointPosition - b.pointPosition).map((point, pointPosition) => {
-                            return <div className={`point point${point.pointNumber} ${point.pointPosition}`} key={pointPosition}>
+                            return <div className={`point point${point.pointNumber}`} key={pointPosition}>
                                 <div className="point-number">{point.pointNumber}</div>
                                 {point.players.map((player, playerNumber) => {
-                                    return <Zoom
-                                        in={!!player}
-                                        style={{ transitionDelay: '300ms' }}>
-                                        <Tooltip title={player.username} disableFocusListener disableTouchListener>
-                                            <div className={`player player${playerNumber}`} key={playerNumber}>
-                                                <img src={require(`../../../assets/svg/chips/${player.chipColor}.svg`)} />
-                                            </div>
-                                        </Tooltip>
-                                    </Zoom>
+                                    return <Tooltip
+                                        title={player.username}
+                                        aria-label="add"
+                                        key={playerNumber}
+                                        style={{ zIndex: 100 }}
+                                        disableFocusListener
+                                        disableTouchListener>
+                                        <div className={`player player${playerNumber}`} key={playerNumber}>
+                                            <img src={require(`../../../assets/svg/chips/${player.chipColor}.svg`)} />
+                                        </div>
+                                    </Tooltip>
                                 })}
                             </div>
                         })
@@ -63,7 +65,7 @@ export class GameBoardScreen extends Component<GameBoardScreenProps> {
                     variant="outlined"
                     size="large"
                     color="primary"
-                    className="app-button start-game"
+                    className="app-button close-game-board-button"
                     onClick={this.props.onGameBoardClose}>Ок</Button>
             </div>
         )

@@ -87,3 +87,14 @@
     }
 }
 
+@media (min-width: 3000px) {
+    .game-board {
+        max-width: 1111px;
+    }
+
+    .close-game-board-button {
+        z-index: 9;
+        position: absolute;
+        bottom: 180px;
+    }
+}

@@ -13,7 +13,7 @@ type RoundResultsScreenProps = {
 export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
     constructor(props: Readonly<RoundResultsScreenProps>) {
         super(props);
-        console.log(props);
+        console.log('RoundResultsScreen', props);
     }
 
     render() {
@@ -32,7 +32,7 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                 <Button
                     size="large"
                     color="primary"
-                    className="app-button start-game"
+                    className="app-button"
                     onClick={this.props.onGameBoardShow}>Игровое поле</Button>
                 <div>
                     <div className="text">
@@ -55,7 +55,7 @@ export class RoundResultsScreen extends Component<RoundResultsScreenProps> {
                         variant="outlined"
                         size="large"
                         color="primary"
-                        className="app-button start-game"
+                        className="app-button"
                         onClick={this.props.onFinishRound}>Ок</Button>
                 </div>
             </div>

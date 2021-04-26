@@ -1,8 +1,13 @@
 export enum ScreenStateEnum {
-    Menu,
-    WaitingUsers,
     Game,
     RoundResults,
     Loading,
     GameBoard
+}
+
+export enum StatusType
+{
+    New,
+    Active,
+    Ended
 }
