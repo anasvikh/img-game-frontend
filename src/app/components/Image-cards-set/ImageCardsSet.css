@@ -38,8 +38,8 @@
     width: 28vh;
     position: relative;
     margin-right: -12vh;
-    border: 3px solid #282c34;
-    background-color: #E2E3E4;
+    border: 4px solid #151a22;
+    background-color: #151a22;
     border-radius: 15px;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .selected {
-    border: 4px solid #E2E3E4;
+    --border: 4px solid #E2E3E4;
     z-index: 999;
     height: 47vh;
     width: 31.31vh;
