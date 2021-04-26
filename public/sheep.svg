@@ -12,8 +12,8 @@
 </mask>
 			
 	<linearGradient id="background-gradient" x1="0" y1="0" y2="1" x2="0" >
-		<stop stop-color="#171c26" offset="0%"/>
-		<stop stop-color="#171c26" offset="100%"/>
+		<stop stop-color="#090e18" offset="0%"/>
+		<stop stop-color="#090e18" offset="100%"/>
 	</linearGradient>
 
 			
