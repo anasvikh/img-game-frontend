@@ -120,14 +120,12 @@ export default class Game extends Component<GameProps, GameState> {
                 this.setState({
                     isAllCardsSended,
                 });
-                let message = '';
                 if (username === this.props.username) {
-                    message = 'Выбор принят. Подожди остальных игроков';
+                    this.props.onMessageReceived('Выбор принят. Подожди остальных игроков');
                 }
                 if (isAllCardsSended) {
-                    message = 'Все проголосовали. Покажи свою карту игрокам';
+                    this.props.onMessageReceived('Все проголосовали. Покажи свою карту игрокам');
                 }
-                this.props.onMessageReceived(message);
             }
         });
 
