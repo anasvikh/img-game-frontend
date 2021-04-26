@@ -67,6 +67,27 @@
     width: 18.5vh;
 }
 
+@media (max-width: 768px) {
+    .game-board {
+        height: 80vh;
+        width: 100%;
+    }
+
+    .point {
+        width: 14vw;
+        height: 14vw;
+    }
+
+    .point1 {
+        width: 33vw;
+    }
+
+    .board-background {
+        height: 80vh;
+        width: 100%;
+    }
+}
+
 @media (max-height: 700px) {
     .game-board {
         max-width: 373px;

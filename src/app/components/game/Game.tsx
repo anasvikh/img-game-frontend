@@ -67,12 +67,14 @@ export default class Game extends Component<GameProps, GameState> {
         window.addEventListener('load', function () {
             console.log('game load');
             window.history.pushState({}, '')
-        })
+        });
 
         window.addEventListener('popstate', function () {
             console.log('game popstate');
             window.history.pushState({}, '')
-        })
+        });
+
+        this.props.history.push('/game');
         
         console.log('game page');
         this.checkGameStatus();
