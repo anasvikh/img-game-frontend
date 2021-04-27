@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Button } from '@material-ui/core';
 import './Home.css'
-import { ILookupModel } from '../../models/lookup.model';
+import { ICardSetsResponseModel, ILookupModel } from '../../models/lookup.model';
 import { CheckboxDialog } from '../checkbox-dialog/CheckboxDialog';
 import { InputDialog } from '../input-dialog/InputDialog';
-import { Link } from 'react-router-dom';
 
 type HomeProps = {
     hub: signalR.HubConnection;
@@ -17,7 +16,7 @@ type HomeProps = {
 
 type HomeState = {
     isSuperUser: boolean;
-    cardSets: ILookupModel[];
+    cardSets: ICardSetsResponseModel[];
     inputDialogConfig: {
         open: boolean
         header: string,
@@ -27,7 +26,7 @@ type HomeState = {
     checkboxDialogConfig: {
         open: boolean
         header: string,
-        values: ILookupModel[]
+        values: ICardSetsResponseModel[]
         onSubmit: any
     };
 }
@@ -58,9 +57,14 @@ export default class Home extends Component<HomeProps, HomeState> {
     componentDidMount = () => {
         this.props.onUsernameEditableChange(true);
 
-        this.props.hub.on('getCardSets', (cardSets: ILookupModel[], error: any) => {
-            cardSets = cardSets.map(s => {return {...s, isChecked: true}});
+        this.props.hub.on('getCardSets', (cardSets: ICardSetsResponseModel[], error: any) => {
             console.log(cardSets, error);
+            cardSets = cardSets.map(group => {
+                return {
+                    ...group,
+                    items: group.items.map(i => { return { ...i, isChecked: true } })
+                }
+            });
             this.setState({
                 cardSets,
                 checkboxDialogConfig: {

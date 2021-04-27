@@ -67,6 +67,10 @@
     width: 18.5vh;
 }
 
+.close-game-board-button {
+    z-index: 9999;
+}
+
 @media (max-width: 768px) {
     .game-board {
         height: 80vh;
@@ -100,7 +104,6 @@
     }
 
     .close-game-board-button {
-        z-index: 9;
         position: absolute;
         bottom: 180px;
     }

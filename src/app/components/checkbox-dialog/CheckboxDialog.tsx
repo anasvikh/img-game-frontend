@@ -1,17 +1,17 @@
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup } from "@material-ui/core";
 import React, { Component } from "react";
-import { ILookupModel } from "../../models/lookup.model";
+import { ICardSetsResponseModel } from "../../models/lookup.model";
 
 type CheckboxDialogProps = {
   open: boolean,
   header: string,
-  values: ILookupModel[],
+  values: ICardSetsResponseModel[],
   onClose: any,
   onSubmit: any,
 }
 
 type CheckboxDialogState = {
-  values: ILookupModel[]
+  values: ICardSetsResponseModel[]
 }
 
 export class CheckboxDialog extends Component<CheckboxDialogProps, CheckboxDialogState> {
@@ -33,23 +33,27 @@ export class CheckboxDialog extends Component<CheckboxDialogProps, CheckboxDialo
   }
 
   handleCheck = (event: any) => {
-    let values = this.state.values
-    values.forEach(value => {
-      if (value.id === +event.target.value)
-        value.isChecked = event.target.checked
-    })
+    let values = this.state.values;
+    values.forEach(group => {
+      group.items.forEach(item => {
+        if (item.id === +event.target.value)
+          item.isChecked = event.target.checked
+      })
+    });
     this.setState({ values });
   }
 
   handleAllChecked = (event: any) => {
-    let values = this.state.values
-    values.forEach(value => value.isChecked = event.target.checked)
-    this.setState({ values });
+    let index = event.target.value;
+    let data = this.state.values;
+    data[index].items.forEach(value => value.isChecked = event.target.checked);
+    this.setState({ values: data });
   }
 
   onSubmit = () => {
     this.props.onSubmit(
       this.state.values
+        .flatMap(v => v.items)
         .filter(v => v.isChecked)
         .map(v => v.id)
     );
@@ -70,32 +74,35 @@ export class CheckboxDialog extends Component<CheckboxDialogProps, CheckboxDialo
       <Dialog open={this.props.open} onClose={this.onClose} onSubmit={this.onSubmit} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">{this.props.header}</DialogTitle>
         <DialogContent>
-          <FormControlLabel
-            control={
-              <Checkbox
-                color="primary"
-                checked={this.state.values.filter(v => !v.isChecked).length === 0}
-                onClick={this.handleAllChecked}
-                value={0} />
-            }
-            key={0}
-            label="Выбрать все"
-          />
-          <FormGroup>
-            {this.state.values.map(el =>
+          {this.state.values.map((group, index) =>
+            <div key={group.groupName}>
               <FormControlLabel
                 control={
                   <Checkbox
                     color="primary"
-                    checked={el.isChecked}
-                    onClick={this.handleCheck}
-                    value={el.id} />
+                    checked={group.items.filter(v => !v.isChecked).length === 0}
+                    onClick={this.handleAllChecked}
+                    value={index} />
                 }
-                key={el.id}
-                label={el.value}
+                label={group.groupName}
               />
-            )}
-          </FormGroup>
+              <FormGroup style={{ marginLeft: 30 }}>
+                {group.items.map(el =>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={el.isChecked}
+                        onClick={this.handleCheck}
+                        value={el.id} />
+                    }
+                    key={el.id}
+                    label={el.value}
+                  />
+                )}
+              </FormGroup>
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.onClose} color="primary">

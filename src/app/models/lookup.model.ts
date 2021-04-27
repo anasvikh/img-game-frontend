@@ -3,3 +3,7 @@ export interface ILookupModel {
     value: string;
     isChecked: boolean;
 }
+export interface ICardSetsResponseModel {
+    groupName: string;
+    items: ILookupModel[];
+}
