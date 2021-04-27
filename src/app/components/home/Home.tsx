@@ -59,6 +59,7 @@ export default class Home extends Component<HomeProps, HomeState> {
         this.props.onUsernameEditableChange(true);
 
         this.props.hub.on('getCardSets', (cardSets: ILookupModel[], error: any) => {
+            cardSets = cardSets.map(s => {return {...s, isChecked: true}});
             console.log(cardSets, error);
             this.setState({
                 cardSets,

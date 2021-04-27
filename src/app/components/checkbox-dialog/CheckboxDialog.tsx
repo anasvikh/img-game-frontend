@@ -2,7 +2,7 @@ import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Fo
 import React, { Component } from "react";
 import { ILookupModel } from "../../models/lookup.model";
 
-type InputDialogProps = {
+type CheckboxDialogProps = {
   open: boolean,
   header: string,
   values: ILookupModel[],
@@ -10,41 +10,58 @@ type InputDialogProps = {
   onSubmit: any,
 }
 
-type InputDialogState = {
-  selectedValues: number[]
+type CheckboxDialogState = {
+  values: ILookupModel[]
 }
 
-export class CheckboxDialog extends Component<InputDialogProps, InputDialogState> {
-  constructor(props: Readonly<InputDialogProps>) {
+export class CheckboxDialog extends Component<CheckboxDialogProps, CheckboxDialogState> {
+  constructor(props: Readonly<CheckboxDialogProps>) {
     super(props);
     this.state = {
-      selectedValues: []
+      values: props.values
     };
   }
 
-  handleChange = (selectedId: number) => {
-    console.log(selectedId);
-    let selectedValues = this.state.selectedValues;
-    selectedValues.includes(selectedId) ?
-    selectedValues = selectedValues.filter(item => item !== selectedId):
-    selectedValues = [...selectedValues, selectedId]
-    console.log(selectedValues);
-    this.setState({
-      selectedValues: selectedValues
+  componentDidUpdate(nextProps: CheckboxDialogProps) {
+    const { values } = this.props;
+    if (nextProps.values !== values) {
+      if (values) {
+        this.setState({ values });
+
+      }
+    }
+  }
+
+  handleCheck = (event: any) => {
+    let values = this.state.values
+    values.forEach(value => {
+      if (value.id === +event.target.value)
+        value.isChecked = event.target.checked
     })
+    this.setState({ values });
+  }
+
+  handleAllChecked = (event: any) => {
+    let values = this.state.values
+    values.forEach(value => value.isChecked = event.target.checked)
+    this.setState({ values });
   }
 
   onSubmit = () => {
-    this.props.onSubmit(this.state.selectedValues);
+    this.props.onSubmit(
+      this.state.values
+        .filter(v => v.isChecked)
+        .map(v => v.id)
+    );
     this.setState({
-      selectedValues: []
+      values: []
     })
   }
 
   onClose = () => {
     this.props.onClose();
     this.setState({
-      selectedValues: []
+      values: []
     })
   }
 
@@ -53,13 +70,25 @@ export class CheckboxDialog extends Component<InputDialogProps, InputDialogState
       <Dialog open={this.props.open} onClose={this.onClose} onSubmit={this.onSubmit} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">{this.props.header}</DialogTitle>
         <DialogContent>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={this.state.values.filter(v => !v.isChecked).length === 0}
+                onClick={this.handleAllChecked}
+                value={0} />
+            }
+            key={0}
+            label="Выбрать все"
+          />
           <FormGroup>
-            {this.props.values.map(el =>
+            {this.state.values.map(el =>
               <FormControlLabel
                 control={
                   <Checkbox
                     color="primary"
-                    onChange={() => this.handleChange(el.id)} 
+                    checked={el.isChecked}
+                    onClick={this.handleCheck}
                     value={el.id} />
                 }
                 key={el.id}
