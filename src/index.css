@@ -12,7 +12,7 @@ body {
   -webkit-user-select: none;
   -ms-user-select: none;
   
-  overscroll-behavior: none;
+  /*   overscroll-behavior: none; */
 }
 
 code {
