@@ -50,15 +50,8 @@
 .selected {
     border: 4px solid lightblue;
     z-index: 999;
-    --height: 47vh;
-    --width: 31.31vh;
-    height: 63vh;
-    width: 42vh;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    position: absolute;
+    height: 47vh;
+    width: 31.31vh;
 }
 
 .card-image {
@@ -91,10 +84,8 @@
 
 @media (max-height: 670px) {
     .card {
-        --height: 46vh;
-        --width: 30.7vh;
-        height: 78vh;
-        width: 52vh;
+        height: 46vh;
+        width: 30.7vh;
     }
 
     .selected {
@@ -110,9 +101,7 @@
     }
 
     .selected {
-        --height: 45vh; 
-        --width: 30.4vh;
-        height: 74vh; 
-        width: 49vh;
+        height: 45vh; 
+        width: 30.4vh;
     }
 }
